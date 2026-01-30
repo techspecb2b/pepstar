@@ -507,9 +507,16 @@
             }
 
             // Save user (pending approval)
-            const users = JSON.parse(localStorage.getItem('peptideUsers') || '[]');
-            const newUser = {
-                email: this.email.value,
+            const users = JSON.parse(localStorage.getItem('peptideUsers') || '{}');
+            const email = this.email.value;
+            
+            // Check if user already exists
+            if (users[email]) {
+                alert('An account with this email already exists');
+                return;
+            }
+            
+            users[email] = {
                 password: password,
                 firstName: this.firstName.value,
                 lastName: this.lastName.value,
@@ -518,7 +525,6 @@
                 approved: false,
                 createdAt: new Date().toISOString()
             };
-            users.push(newUser);
             localStorage.setItem('peptideUsers', JSON.stringify(users));
 
             // Show success
