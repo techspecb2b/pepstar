@@ -779,6 +779,43 @@
             location.reload();
         }
 
+        // Migrate old array format to object format
+        function migrateUsers() {
+            const stored = localStorage.getItem('peptideUsers');
+            if (!stored) return;
+            
+            try {
+                const data = JSON.parse(stored);
+                // Check if it's an array (old format)
+                if (Array.isArray(data)) {
+                    const usersObj = {};
+                    data.forEach(user => {
+                        if (user.email) {
+                            usersObj[user.email] = {
+                                password: user.password,
+                                firstName: user.firstName,
+                                lastName: user.lastName,
+                                institution: user.institution,
+                                position: user.position,
+                                role: user.role,
+                                researchArea: user.researchArea,
+                                approved: user.approved || false,
+                                rejected: user.rejected || false,
+                                createdAt: user.createdAt
+                            };
+                        }
+                    });
+                    localStorage.setItem('peptideUsers', JSON.stringify(usersObj));
+                    console.log('Migrated users from array to object format');
+                }
+            } catch (e) {
+                console.error('Migration error:', e);
+            }
+        }
+        
+        // Run migration on load
+        migrateUsers();
+
         function getUsers() {
             const stored = localStorage.getItem('peptideUsers');
             return stored ? JSON.parse(stored) : {};
