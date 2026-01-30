@@ -1051,7 +1051,7 @@
             const orderNumber = 'PL-' + Date.now().toString().slice(-6);
 
             // Build Trello card content
-            const cardName = `Order - ${customer.firstName} ${customer.lastName} - $${total.toFixed(2)}${isPickup ? ' [PICKUP]' : ''}`;
+            const cardName = `${orderNumber} - ${customer.firstName} ${customer.lastName} - $${total.toFixed(2)}${isPickup ? ' [PICKUP]' : ''}`;
             
             const itemsList = cart.map(item => 
                 `• ${item.name} (${item.size}) x${item.quantity} - $${(item.price * item.quantity).toFixed(2)}`
