@@ -481,6 +481,46 @@
         const cart = JSON.parse(localStorage.getItem('peptideCart') || '[]');
         document.getElementById('cartItems').textContent = cart.reduce((sum, item) => sum + item.quantity, 0);
 
+        // Load and display orders
+        function loadOrders() {
+            const orders = JSON.parse(localStorage.getItem('peptideOrders') || '[]');
+            const ordersEmpty = document.getElementById('ordersEmpty');
+            const ordersTable = document.getElementById('ordersTable');
+            const ordersBody = document.getElementById('ordersBody');
+            
+            if (orders.length === 0) {
+                ordersEmpty.style.display = 'block';
+                ordersTable.style.display = 'none';
+                return;
+            }
+            
+            ordersEmpty.style.display = 'none';
+            ordersTable.style.display = 'table';
+            
+            // Sort orders by date (newest first)
+            orders.sort((a, b) => new Date(b.date) - new Date(a.date));
+            
+            ordersBody.innerHTML = orders.map(order => {
+                const itemCount = order.items ? order.items.reduce((sum, item) => sum + item.quantity, 0) : 0;
+                const status = (order.status || 'pending').toLowerCase();
+                const statusClass = status === 'pending' ? 'pending' : 
+                                   status === 'processing' ? 'processing' : 
+                                   status === 'shipped' ? 'shipped' : 'pending';
+                const statusDisplay = status.charAt(0).toUpperCase() + status.slice(1);
+                return `
+                    <tr>
+                        <td><strong>${order.orderNumber || order.id || 'N/A'}</strong></td>
+                        <td>${order.date ? new Date(order.date).toLocaleDateString() : 'N/A'}</td>
+                        <td>${itemCount} item${itemCount !== 1 ? 's' : ''}</td>
+                        <td>$${order.total ? order.total.toFixed(2) : '0.00'}</td>
+                        <td><span class="status-badge ${statusClass}">${statusDisplay}</span></td>
+                    </tr>
+                `;
+            }).join('');
+        }
+        
+        loadOrders();
+
         // Logout
         function logout() {
             localStorage.removeItem('peptideUser');
