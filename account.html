@@ -501,6 +501,9 @@
         function parseOrderFromCard(card, listStatusMap) {
             const desc = card.desc || '';
             
+            console.log('Card name:', card.name);
+            console.log('Card desc preview:', desc.substring(0, 200));
+            
             // Extract order number from card name (format: "PL-XXXXXX - Name - $XX.XX")
             const orderMatch = card.name.match(/PL-\d+/);
             const orderNumber = orderMatch ? orderMatch[0] : 'N/A';
@@ -508,6 +511,9 @@
             // Extract email from description
             const emailMatch = desc.match(/Email:\s*([^\s\n]+)/i);
             const email = emailMatch ? emailMatch[1].trim() : null;
+            
+            console.log('Email match result:', emailMatch);
+            console.log('Extracted email:', email);
             
             // Extract total from description
             const totalMatch = desc.match(/\*\*TOTAL:\s*\$?([\d.]+)\*\*/i) || card.name.match(/\$(\d+\.?\d*)/);
@@ -550,7 +556,9 @@
             const ordersEmpty = document.getElementById('ordersEmpty');
             const ordersTable = document.getElementById('ordersTable');
             const ordersBody = document.getElementById('ordersBody');
-            const userEmail = user.email ? user.email.toLowerCase() : '';
+            const userEmail = user.email ? user.email.toLowerCase().trim() : '';
+            
+            console.log('Loading orders for email:', userEmail);
             
             // Show loading state
             ordersEmpty.style.display = 'none';
@@ -563,6 +571,7 @@
                     `https://api.trello.com/1/boards/${TRELLO_CONFIG.boardId}/lists?key=${TRELLO_CONFIG.apiKey}&token=${TRELLO_CONFIG.token}`
                 );
                 const lists = await listsRes.json();
+                console.log('Trello lists:', lists);
                 
                 const listStatusMap = {};
                 lists.forEach(list => {
@@ -579,20 +588,27 @@
                     }
                 });
 
-                // Fetch all cards from the board
+                // Fetch all cards from the board with descriptions
                 const cardsRes = await fetch(
-                    `https://api.trello.com/1/boards/${TRELLO_CONFIG.boardId}/cards?key=${TRELLO_CONFIG.apiKey}&token=${TRELLO_CONFIG.token}`
+                    `https://api.trello.com/1/boards/${TRELLO_CONFIG.boardId}/cards?fields=name,desc,idList&key=${TRELLO_CONFIG.apiKey}&token=${TRELLO_CONFIG.token}`
                 );
                 const cards = await cardsRes.json();
+                console.log('Trello cards found:', cards.length);
+                if (cards.length > 0) {
+                    console.log('First card sample:', cards[0]);
+                }
                 
                 // Parse cards and filter by user email
                 const userOrders = [];
                 cards.forEach(card => {
                     const order = parseOrderFromCard(card, listStatusMap);
-                    if (order.email && order.email.toLowerCase() === userEmail) {
+                    console.log('Parsed order:', order.orderNumber, 'email:', order.email);
+                    if (order.email && order.email.toLowerCase().trim() === userEmail) {
                         userOrders.push(order);
                     }
                 });
+                
+                console.log('Orders matching user email:', userOrders.length);
                 
                 if (userOrders.length === 0) {
                     ordersEmpty.style.display = 'block';
