@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FAQ | Pepstar Peptides Research Peptides</title>
+    <meta name="description" content="Frequently asked questions about Pepstar Peptides research peptides, ordering, shipping, and verification requirements.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0a5c6b;
+            --primary-dark: #084550;
+            --accent: #00d4aa;
+            --accent-glow: rgba(0, 212, 170, 0.3);
+            --bg-light: #f8fafb;
+            --bg-white: #ffffff;
+            --text-primary: #1a2b32;
+            --text-secondary: #5a6d75;
+            --text-muted: #8a9da5;
+            --border: #e2e8eb;
+            --border-light: #f0f4f5;
+            --shadow-sm: 0 2px 8px rgba(10, 92, 107, 0.06);
+            --shadow-md: 0 8px 24px rgba(10, 92, 107, 0.1);
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 20px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: var(--bg-light);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        h1, h2, h3 { font-family: 'Space Grotesk', sans-serif; font-weight: 600; line-height: 1.2; }
+        a { text-decoration: none; color: inherit; }
+
+        /* Header */
+        header {
+            background: var(--bg-white);
+            border-bottom: 1px solid var(--border-light);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-inner {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 40px;
+            height: 72px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            font-size: 1.4rem;
+            color: var(--primary);
+        }
+
+        .logo-img {
+            height: 40px;
+            width: auto;
+        }
+
+        .logo-img { height: 36px; width: auto; border-radius: 8px; }
+
+        nav { display: flex; align-items: center; gap: 32px; }
+        nav a { color: var(--text-secondary); font-weight: 500; transition: color 0.2s; }
+        nav a:hover { color: var(--primary); }
+        nav a.active { color: var(--primary); }
+
+        .nav-actions { display: flex; align-items: center; gap: 16px; }
+
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            background: var(--primary);
+            color: white;
+            border-radius: var(--radius-sm);
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+
+        .btn-primary:hover { background: var(--primary-dark); }
+
+        /* Page Hero */
+        .page-hero {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            padding: 60px 40px;
+            text-align: center;
+            color: white;
+        }
+
+        .page-hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 12px;
+        }
+
+        .page-hero p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Main Content */
+        main {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 60px 40px;
+        }
+
+        /* FAQ Categories */
+        .faq-nav {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 40px;
+            justify-content: center;
+        }
+
+        .faq-nav-btn {
+            padding: 10px 20px;
+            background: var(--bg-white);
+            border: 1px solid var(--border);
+            border-radius: 50px;
+            font-family: inherit;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .faq-nav-btn:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .faq-nav-btn.active {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: white;
+        }
+
+        /* FAQ Section */
+        .faq-section {
+            margin-bottom: 48px;
+        }
+
+        .faq-section-title {
+            font-size: 1.25rem;
+            color: var(--primary);
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid var(--accent);
+            display: inline-block;
+        }
+
+        /* Accordion */
+        .accordion-item {
+            background: var(--bg-white);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-md);
+            margin-bottom: 12px;
+            overflow: hidden;
+            transition: all 0.2s;
+        }
+
+        .accordion-item:hover {
+            border-color: var(--border);
+        }
+
+        .accordion-header {
+            width: 100%;
+            padding: 20px 24px;
+            background: none;
+            border: none;
+            font-family: inherit;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            text-align: left;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .accordion-header:hover {
+            color: var(--primary);
+        }
+
+        .accordion-icon {
+            width: 24px;
+            height: 24px;
+            stroke: var(--text-muted);
+            transition: transform 0.3s;
+            flex-shrink: 0;
+        }
+
+        .accordion-item.active .accordion-icon {
+            transform: rotate(180deg);
+            stroke: var(--primary);
+        }
+
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+
+        .accordion-content-inner {
+            padding: 0 24px 20px;
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+
+        .accordion-content-inner p {
+            margin-bottom: 12px;
+        }
+
+        .accordion-content-inner p:last-child {
+            margin-bottom: 0;
+        }
+
+        .accordion-content-inner ul {
+            margin: 12px 0;
+            padding-left: 20px;
+        }
+
+        .accordion-content-inner li {
+            margin-bottom: 8px;
+        }
+
+        .accordion-content-inner a {
+            color: var(--primary);
+            font-weight: 500;
+        }
+
+        .accordion-content-inner a:hover {
+            text-decoration: underline;
+        }
+
+        /* Contact CTA */
+        .contact-cta {
+            background: linear-gradient(135deg, rgba(10, 92, 107, 0.05), rgba(0, 212, 170, 0.05));
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-lg);
+            padding: 40px;
+            text-align: center;
+            margin-top: 60px;
+        }
+
+        .contact-cta h3 {
+            font-size: 1.5rem;
+            margin-bottom: 12px;
+        }
+
+        .contact-cta p {
+            color: var(--text-secondary);
+            margin-bottom: 24px;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--primary-dark);
+            color: white;
+            padding: 60px 40px 30px;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 40px;
+        }
+
+        .footer-brand p {
+            color: rgba(255,255,255,0.7);
+            font-size: 0.9rem;
+            margin-top: 16px;
+            max-width: 280px;
+        }
+
+        .footer-links h4 {
+            font-size: 0.9rem;
+            margin-bottom: 16px;
+            color: var(--accent);
+        }
+
+        .footer-links a {
+            display: block;
+            color: rgba(255,255,255,0.7);
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+            transition: color 0.2s;
+        }
+
+        .footer-links a:hover { color: white; }
+
+        .footer-bottom {
+            max-width: 1400px;
+            margin: 40px auto 0;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            text-align: center;
+            color: rgba(255,255,255,0.5);
+            font-size: 0.85rem;
+        }
+
+        /* Mobile Nav */
+        .mobile-nav-toggle {
+            display: none;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 8px;
+        }
+
+        .mobile-nav-toggle svg {
+            width: 24px;
+            height: 24px;
+            stroke: var(--text-primary);
+        }
+
+        @media (max-width: 900px) {
+            nav { display: none; }
+            .mobile-nav-toggle { display: block; }
+            .header-inner { padding: 0 20px; }
+            .page-hero { padding: 40px 20px; }
+            .page-hero h1 { font-size: 2rem; }
+            main { padding: 40px 20px; }
+            .footer-content { grid-template-columns: 1fr 1fr; }
+        }
+
+        @media (max-width: 600px) {
+            .faq-nav { flex-direction: column; }
+            .faq-nav-btn { width: 100%; text-align: center; }
+            .footer-content { grid-template-columns: 1fr; }
+            .contact-cta { padding: 30px 20px; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="header-inner">
+            <a href="index.html" class="logo">
+                <img src="logo.png" alt="Pepstar Peptides" class="logo-img">
+                Pepstar Peptides
+            </a>
+            <nav>
+                <a href="catalog.html">Catalog</a>
+                <a href="about.html">About</a>
+                <a href="faq.html" class="active">FAQ</a>
+                <a href="contact.html">Contact</a>
+            </nav>
+            <div class="nav-actions">
+                <a href="login.html" class="btn-primary">Member Login</a>
+            </div>
+            <button class="mobile-nav-toggle">
+                <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+            </button>
+        </div>
+    </header>
+
+    <!-- Page Hero -->
+    <section class="page-hero">
+        <h1>Frequently Asked Questions</h1>
+        <p>Find answers to common questions about our products, ordering process, and research verification requirements.</p>
+    </section>
+
+    <!-- Main Content -->
+    <main>
+        <!-- Category Navigation -->
+        <div class="faq-nav">
+            <button class="faq-nav-btn active" onclick="filterFAQ('all')">All Questions</button>
+            <button class="faq-nav-btn" onclick="filterFAQ('ordering')">Ordering</button>
+            <button class="faq-nav-btn" onclick="filterFAQ('products')">Products</button>
+            <button class="faq-nav-btn" onclick="filterFAQ('shipping')">Shipping</button>
+            <button class="faq-nav-btn" onclick="filterFAQ('account')">Account</button>
+        </div>
+
+        <!-- Ordering Section -->
+        <section class="faq-section" data-category="ordering">
+            <h2 class="faq-section-title">Ordering & Payment</h2>
+            
+            <div class="accordion-item">
+                <button class="accordion-header" onclick="toggleAccordion(this)">
+                    How do I place an order?
+                    <svg class="accordion-icon" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+                </button>
+                <div class="accordion-content">
+                    <div class="accordion-content-inner">
+                        <p>To place an order, you must first have an approved research account. Browse our catalog, add items to your cart, and proceed to checkout. During checkout, you'll provide your shipping information and complete the order form.</p>
+                        <p>New to Pepstar Peptides? <a href="register.html">Apply for a research account</a> to get started.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="accordion-item">
+                <button class="accordion-header" onclick="toggleAccordion(this)">
+                    What payment methods do you accept?
+                    <svg class="accordion-icon" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+                </button>
+                <div class="accordion-content">
+                    <div class="accordion-content-inner">
+                        <p>We accept payment via bank transfer, cryptocurrency (BTC, ETH), and select credit cards for verified accounts. Payment instructions are provided after order submission.</p>
+                        <p>For institutional purchase orders, please <a href="contact.html">contact us</a> directly to arrange billing.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="accordion-item">
+                <button class="accordion-header" onclick="toggleAccordion(this)">
+                    Is there a minimum order amount?
+                    <svg class="accordion-icon" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+                </button>
+                <div class="accordion-content">
+                    <div class="accordion-content-inner">
+                        <p>There is no minimum order amount. However, orders over $200 qualify for free standard shipping within the United States.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="accordion-item">
+                <button class="accordion-header" onclick="toggleAccordion(this)">
+                    Can I modify or cancel my order?
+                    <svg class="accordion-icon" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+                </button>
+                <div class="accordion-content">
+                    <div class="accordion-content-inner">
+                        <p>Orders can be modified or cancelled within 2 hours of placement. After this window, orders enter processing and cannot be changed. Please <a href="contact.html">contact support</a> immediately if you need to make changes.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Products Section -->
+        <section class="faq-section" data-category="products">
+            <h2 class="faq-section-title">Products & Quality</h2>
+            
+            <div class="accordion-item">
+                <button class="accordion-header" onclick="toggleAccordion(this)">
+                    What purity levels are your peptides?
+                    <svg class="accordion-icon" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+                </button>
+                <div class="accordion-content">
+                    <div class="accordion-content-inner">
+                        <p>All our peptides are manufactured to a minimum purity of 98%, with most products exceeding 99% purity. Each batch undergoes HPLC testing and comes with a Certificate of Analysis (COA) documenting exact purity levels.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="accordion-item">
+                <button class="accordion-header" onclick="toggleAccordion(this)">
+                    How should I store peptides?
+                    <svg class="accordion-icon" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+                </button>
+                <div class="accordion-content">
+                    <div class="accordion-content-inner">
+                        <p>For optimal stability:</p>
+                        <ul>
+                            <li><strong>Lyophilized (powder):</strong> Store at -20°C for long-term storage, or 2-8°C for short-term (up to 3 months)</li>
+                            <li><strong>Reconstituted:</strong> Store at 2-8°C and use within 2-4 weeks</li>
+                            <li>Keep away from light and avoid repeated freeze-thaw cycles</li>
+                            <li>Use bacteriostatic water for reconstitution when possible</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="accordion-item">
+                <button class="accordion-header" onclick="toggleAccordion(this)">
+                    Do you provide Certificates of Analysis?
+                    <svg class="accordion-icon" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+                </button>
+                <div class="accordion-content">
+                    <div class="accordion-content-inner">
+                        <p>Yes, every product ships with a Certificate of Analysis (COA) from third-party testing. COAs include HPLC purity analysis, mass spectrometry verification, and amino acid sequence confirmation.</p>
+                        <p>Digital COAs are also available in your account dashboard after purchase.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="accordion-item">
+                <button class="accordion-header" onclick="toggleAccordion(this)">
+                    Are these products for human use?
+                    <svg class="accordion-icon" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+                </button>
+                <div class="accordion-content">
+                    <div class="accordion-content-inner">
+                        <p><strong>No.</strong> All products sold by Pepstar Peptides are strictly for in-vitro research and laboratory use only. They are not intended for human or veterinary use, and are not to be used for diagnostic or therapeutic purposes.</p>
+                        <p>By purchasing, you confirm that products will be used solely for legitimate scientific research by qualified personnel.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Shipping Section -->
+        <section class="faq-section" data-category="shipping">
+            <h2 class="faq-section-title">Shipping & Delivery</h2>
+            
+            <div class="accordion-item">
+                <button class="accordion-header" onclick="toggleAccordion(this)">
+                    How long does shipping take?
+                    <svg class="accordion-icon" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+                </button>
+                <div class="accordion-content">
+                    <div class="accordion-content-inner">
+                        <p>Domestic (USA) shipping typically takes 2-5 business days. International shipping varies by destination, generally 5-14 business days. Express options are available at checkout.</p>
+                        <p>Orders are processed within 24-48 hours on business days.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="accordion-item">
+                <button class="accordion-header" onclick="toggleAccordion(this)">
+                    Do you ship internationally?
+                    <svg class="accordion-icon" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+                </button>
+                <div class="accordion-content">
+                    <div class="accordion-content-inner">
+                        <p>Yes, we ship to most countries. However, some destinations have restrictions on peptide imports. It is the buyer's responsibility to understand and comply with local import regulations.</p>
+                        <p>International orders may be subject to customs duties and taxes, which are the responsibility of the recipient.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="accordion-item">
+                <button class="accordion-header" onclick="toggleAccordion(this)">
+                    How are peptides packaged for shipping?
+                    <svg class="accordion-icon" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+                </button>
+                <div class="accordion-content">
+                    <div class="accordion-content-inner">
+                        <p>All peptides are shipped in sealed vials, packaged in insulated containers with cold packs during warmer months to maintain product integrity. Lyophilized peptides are stable at room temperature for short periods but are always shipped with temperature protection.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="accordion-item">
+                <button class="accordion-header" onclick="toggleAccordion(this)">
+                    What if my package is lost or damaged?
+                    <svg class="accordion-icon" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+                </button>
+                <div class="accordion-content">
+                    <div class="accordion-content-inner">
+                        <p>We stand behind our deliveries. If your package is lost in transit or arrives damaged, contact us within 48 hours of the expected delivery date. We will either reship your order or provide a full refund.</p>
+                        <p>Please retain all packaging materials if reporting damage.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Account Section -->
+        <section class="faq-section" data-category="account">
+            <h2 class="faq-section-title">Account & Verification</h2>
+            
+            <div class="accordion-item">
+                <button class="accordion-header" onclick="toggleAccordion(this)">
+                    Why do I need to apply for an account?
+                    <svg class="accordion-icon" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+                </button>
+                <div class="accordion-content">
+                    <div class="accordion-content-inner">
+                        <p>Account verification ensures our products reach qualified researchers conducting legitimate scientific work. This protects both our customers and helps us maintain compliance with research chemical regulations.</p>
+                        <p>Verification is typically completed within 1-2 business days.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="accordion-item">
+                <button class="accordion-header" onclick="toggleAccordion(this)">
+                    What information is required for verification?
+                    <svg class="accordion-icon" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+                </button>
+                <div class="accordion-content">
+                    <div class="accordion-content-inner">
+                        <p>We ask for:</p>
+                        <ul>
+                            <li>Your name and professional email (institutional emails preferred)</li>
+                            <li>Organization/institution name</li>
+                            <li>Your role or position</li>
+                            <li>Brief description of your research area</li>
+                        </ul>
+                        <p>In some cases, we may request additional documentation such as institutional ID or a supervisor's contact.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="accordion-item">
+                <button class="accordion-header" onclick="toggleAccordion(this)">
+                    How long does account approval take?
+                    <svg class="accordion-icon" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+                </button>
+                <div class="accordion-content">
+                    <div class="accordion-content-inner">
+                        <p>Most applications are reviewed within 1-2 business days. You'll receive an email notification once your account has been approved and activated.</p>
+                        <p>Applications submitted with institutional email addresses are typically processed faster.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="accordion-item">
+                <button class="accordion-header" onclick="toggleAccordion(this)">
+                    I forgot my password. How do I reset it?
+                    <svg class="accordion-icon" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+                </button>
+                <div class="accordion-content">
+                    <div class="accordion-content-inner">
+                        <p>Click the "Forgot password?" link on the <a href="login.html">login page</a>. Enter your email address and we'll send you a password reset link. The link expires after 24 hours for security.</p>
+                        <p>If you don't receive the email, check your spam folder or <a href="contact.html">contact support</a>.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact CTA -->
+        <div class="contact-cta">
+            <h3>Still Have Questions?</h3>
+            <p>Our team is here to help with any questions about products, ordering, or your research needs.</p>
+            <a href="contact.html" class="btn-primary">Contact Support</a>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-brand">
+                <a href="index.html" class="logo">
+                    <img src="logo.png" alt="Pepstar Peptides" class="logo-img">
+                    Pepstar Peptides
+                </a>
+                <p>Premium research peptides for qualified researchers. Committed to purity, quality, and scientific advancement.</p>
+            </div>
+            <div class="footer-links">
+                <h4>Products</h4>
+                <a href="catalog.html">Full Catalog</a>
+                <a href="catalog.html?category=healing">Healing Peptides</a>
+                <a href="catalog.html?category=growth">Growth Hormone</a>
+                <a href="catalog.html?category=metabolic">Metabolic</a>
+            </div>
+            <div class="footer-links">
+                <h4>Company</h4>
+                <a href="about.html">About Us</a>
+                <a href="faq.html">FAQ</a>
+                <a href="contact.html">Contact</a>
+            </div>
+            <div class="footer-links">
+                <h4>Account</h4>
+                <a href="login.html">Member Login</a>
+                <a href="register.html">Apply for Account</a>
+                <a href="cart.html">View Cart</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2025 Pepstar Peptides. All products are for research purposes only. Not for human consumption.</p>
+        </div>
+    </footer>
+
+    <script>
+        function toggleAccordion(button) {
+            const item = button.parentElement;
+            const content = item.querySelector('.accordion-content');
+            const isActive = item.classList.contains('active');
+
+            // Close all others
+            document.querySelectorAll('.accordion-item.active').forEach(activeItem => {
+                if (activeItem !== item) {
+                    activeItem.classList.remove('active');
+                    activeItem.querySelector('.accordion-content').style.maxHeight = null;
+                }
+            });
+
+            // Toggle current
+            if (isActive) {
+                item.classList.remove('active');
+                content.style.maxHeight = null;
+            } else {
+                item.classList.add('active');
+                content.style.maxHeight = content.scrollHeight + 'px';
+            }
+        }
+
+        function filterFAQ(category) {
+            // Update nav buttons
+            document.querySelectorAll('.faq-nav-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            // Filter sections
+            document.querySelectorAll('.faq-section').forEach(section => {
+                if (category === 'all' || section.dataset.category === category) {
+                    section.style.display = 'block';
+                } else {
+                    section.style.display = 'none';
+                }
+            });
+        }
+    </script>
+</body>
+</html>
