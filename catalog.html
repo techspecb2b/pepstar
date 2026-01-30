@@ -4,1362 +4,199 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Research Peptide Catalog | Pepstar Peptides</title>
-    <meta name="description" content="Browse our complete catalog of premium research peptides. 99%+ purity, USA manufactured.">
+    <meta name="description" content="Browse our complete catalog of premium research peptides. 99%+ purity, third-party tested.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --primary: #0a5c6b;
-            --primary-dark: #084550;
-            --accent: #00d4aa;
-            --accent-glow: rgba(0, 212, 170, 0.3);
-            --bg-light: #f8fafb;
-            --bg-white: #ffffff;
-            --text-primary: #1a2b32;
-            --text-secondary: #5a6d75;
-            --text-muted: #8a9da5;
-            --border: #e2e8eb;
-            --border-light: #f0f4f5;
-            --shadow-sm: 0 2px 8px rgba(10, 92, 107, 0.06);
-            --shadow-md: 0 8px 24px rgba(10, 92, 107, 0.1);
-            --shadow-lg: 0 16px 48px rgba(10, 92, 107, 0.12);
-            --radius-sm: 8px;
-            --radius-md: 12px;
-            --radius-lg: 20px;
-        }
-
+        :root { --primary: #0B4B8E; --primary-dark: #083a6e; --accent: #FF7D24; --accent-glow: rgba(255,125,36,0.3); --bg-light: #f8f9fb; --bg-white: #ffffff; --text-primary: #1a2b32; --text-secondary: #5a6d75; --text-muted: #8a9da5; --border: #e2e8eb; --border-light: #f0f4f5; --shadow-sm: 0 2px 8px rgba(11,75,142,0.06); --shadow-md: 0 8px 24px rgba(11,75,142,0.1); --shadow-lg: 0 16px 48px rgba(11,75,142,0.12); --radius-sm: 8px; --radius-md: 12px; --radius-lg: 20px; }
         * { margin: 0; padding: 0; box-sizing: border-box; }
-
-        body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            background: var(--bg-light);
-            color: var(--text-primary);
-            line-height: 1.6;
-        }
-
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg-light); color: var(--text-primary); line-height: 1.6; }
         h1, h2, h3, h4 { font-family: 'Space Grotesk', sans-serif; font-weight: 600; line-height: 1.2; }
         a { text-decoration: none; color: inherit; }
-
-        /* Header */
-        header {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            z-index: 1000;
-            border-bottom: 1px solid var(--border-light);
-        }
-
-        .header-inner {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 0 40px;
-            height: 72px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-family: 'Space Grotesk', sans-serif;
-            font-weight: 700;
-            font-size: 1.4rem;
-            color: var(--primary);
-        }
-
-        .logo-img {
-            height: 40px;
-            width: auto;
-        }
-
-        .logo-img { height: 36px; width: auto; border-radius: 8px; }
-
+        header { position: fixed; top: 0; left: 0; right: 0; background: rgba(255,255,255,0.95); backdrop-filter: blur(10px); z-index: 1000; border-bottom: 1px solid var(--border-light); }
+        .header-inner { max-width: 1400px; margin: 0 auto; padding: 0 40px; height: 72px; display: flex; align-items: center; justify-content: space-between; }
+        .logo { display: flex; align-items: center; }
+        .logo-img { height: 50px; width: auto; }
         nav { display: flex; align-items: center; gap: 32px; }
         nav a { font-weight: 500; color: var(--text-secondary); transition: color 0.2s; font-size: 0.95rem; }
         nav a:hover, nav a.active { color: var(--primary); }
-
-        .header-actions { display: flex; align-items: center; gap: 16px; }
-
-        .cart-btn {
-            position: relative;
-            width: 44px;
-            height: 44px;
-            background: var(--bg-light);
-            border-radius: var(--radius-sm);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.2s;
-        }
-
+        .header-actions { display: flex; align-items: center; gap: 12px; }
+        .header-search { position: relative; }
+        .header-search input { width: 200px; padding: 10px 14px 10px 38px; border: 1px solid var(--border); border-radius: var(--radius-sm); font-family: inherit; font-size: 0.9rem; transition: all 0.2s; }
+        .header-search input:focus { outline: none; border-color: var(--primary); width: 260px; }
+        .header-search svg { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); width: 16px; height: 16px; stroke: var(--text-muted); }
+        .cart-btn { position: relative; width: 44px; height: 44px; background: var(--bg-light); border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; }
         .cart-btn:hover { background: var(--border); }
         .cart-btn svg { width: 20px; height: 20px; stroke: var(--text-primary); }
-
-        .cart-count {
-            position: absolute;
-            top: -4px;
-            right: -4px;
-            background: var(--accent);
-            color: var(--primary-dark);
-            font-size: 0.7rem;
-            font-weight: 700;
-            width: 18px;
-            height: 18px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .btn-primary {
-            background: var(--primary);
-            color: white;
-            padding: 10px 20px;
-            border-radius: var(--radius-sm);
-            font-weight: 600;
-            font-size: 0.9rem;
-            transition: all 0.2s;
-        }
-
+        .cart-count { position: absolute; top: -4px; right: -4px; background: var(--accent); color: white; font-size: 0.7rem; font-weight: 700; width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+        .btn-primary { background: var(--primary); color: white; padding: 10px 20px; border-radius: var(--radius-sm); font-weight: 600; font-size: 0.9rem; }
         .btn-primary:hover { background: var(--primary-dark); }
-
-        /* Mobile Nav Toggle */
-        .mobile-nav-toggle {
-            display: none;
-            background: none;
-            border: none;
-            cursor: pointer;
-            padding: 8px;
-        }
-
-        .mobile-nav-toggle svg {
-            width: 24px;
-            height: 24px;
-            stroke: var(--text-primary);
-        }
-
-        /* Page Layout */
-        .page-content {
-            padding: 112px 40px 60px;
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-
-        .page-header {
-            margin-bottom: 32px;
-        }
-
-        .page-header h1 {
-            font-size: 2.5rem;
-            margin-bottom: 8px;
-        }
-
-        .page-header p {
-            color: var(--text-secondary);
-            font-size: 1.1rem;
-        }
-
-        .catalog-layout {
-            display: grid;
-            grid-template-columns: 280px 1fr;
-            gap: 40px;
-        }
-
-        /* Sidebar */
-        .sidebar {
-            position: sticky;
-            top: 112px;
-            height: fit-content;
-        }
-
-        .filter-section {
-            background: var(--bg-white);
-            border: 1px solid var(--border-light);
-            border-radius: var(--radius-md);
-            padding: 20px;
-            margin-bottom: 16px;
-        }
-
-        .filter-section h3 {
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 16px;
-        }
-
-        .search-input {
-            width: 100%;
-            padding: 12px 14px;
-            border: 1px solid var(--border);
-            border-radius: var(--radius-sm);
-            font-family: inherit;
-            font-size: 0.9rem;
-            transition: all 0.2s;
-        }
-
-        .search-input:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(10, 92, 107, 0.1);
-        }
-
-        .filter-group {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .filter-checkbox {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            cursor: pointer;
-        }
-
-        .filter-checkbox input {
-            width: 18px;
-            height: 18px;
-            accent-color: var(--primary);
-            cursor: pointer;
-        }
-
-        .filter-checkbox span {
-            font-size: 0.9rem;
-            color: var(--text-secondary);
-        }
-
-        .price-inputs {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .price-inputs input {
-            flex: 1;
-            padding: 10px 12px;
-            border: 1px solid var(--border);
-            border-radius: var(--radius-sm);
-            font-family: inherit;
-            font-size: 0.9rem;
-            width: 80px;
-        }
-
-        .price-inputs input:focus {
-            outline: none;
-            border-color: var(--primary);
-        }
-
-        .price-inputs span {
-            color: var(--text-muted);
-        }
-
-        /* Main Content */
-        .main-content {
-            min-height: 60vh;
-        }
-
-        .toolbar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-
-        .results-count {
-            font-size: 0.9rem;
-            color: var(--text-secondary);
-        }
-
-        .sort-select {
-            padding: 10px 14px;
-            border: 1px solid var(--border);
-            border-radius: var(--radius-sm);
-            font-family: inherit;
-            font-size: 0.9rem;
-            background: var(--bg-white);
-            cursor: pointer;
-        }
-
-        .active-filters {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin-bottom: 20px;
-        }
-
-        .filter-tag {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            padding: 6px 12px;
-            background: rgba(10, 92, 107, 0.1);
-            color: var(--primary);
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 500;
-        }
-
-        .filter-tag button {
-            background: none;
-            border: none;
-            cursor: pointer;
-            padding: 0;
-            display: flex;
-            align-items: center;
-        }
-
-        .filter-tag button svg {
-            width: 14px;
-            height: 14px;
-            stroke: var(--primary);
-        }
-
-        /* Products Grid */
-        .products-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 24px;
-        }
-
-        .product-card {
-            background: var(--bg-white);
-            border: 1px solid var(--border-light);
-            border-radius: var(--radius-md);
-            overflow: hidden;
-            transition: all 0.2s;
-            cursor: pointer;
-        }
-
-        .product-card:hover {
-            border-color: var(--border);
-            box-shadow: var(--shadow-md);
-            transform: translateY(-2px);
-        }
-
-        .product-image {
-            height: 180px;
-            background: linear-gradient(135deg, #f0f7f8, #e8f4f5);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-        }
-
-        .product-image img {
-            max-width: 80%;
-            max-height: 80%;
-            object-fit: contain;
-        }
-
-        .product-placeholder {
-            width: 80px;
-            height: 80px;
-            background: linear-gradient(135deg, var(--primary), var(--accent));
-            border-radius: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            opacity: 0.7;
-        }
-
-        .product-placeholder svg {
-            width: 40px;
-            height: 40px;
-            fill: white;
-        }
-
-        .product-badge {
-            position: absolute;
-            top: 12px;
-            left: 12px;
-            padding: 4px 10px;
-            background: var(--accent);
-            color: var(--primary-dark);
-            font-size: 0.7rem;
-            font-weight: 700;
-            border-radius: 4px;
-            text-transform: uppercase;
-        }
-
-        .product-info {
-            padding: 20px;
-        }
-
-        .product-category {
-            font-size: 0.75rem;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 6px;
-        }
-
-        .product-name {
-            font-size: 1.1rem;
-            font-weight: 600;
-            margin-bottom: 8px;
-        }
-
-        .product-meta {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 12px;
-            font-size: 0.85rem;
-            color: var(--text-secondary);
-        }
-
-        .product-meta span {
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-
-        .product-price {
-            font-size: 1.25rem;
-            font-weight: 700;
-            color: var(--primary);
-        }
-
-        .product-price.hidden-price {
-            font-size: 0.9rem;
-            color: var(--text-muted);
-            font-weight: 500;
-        }
-
-        .product-sizes {
-            display: flex;
-            gap: 8px;
-            margin-top: 12px;
-        }
-
-        .size-tag {
-            padding: 4px 10px;
-            background: var(--bg-light);
-            border-radius: 4px;
-            font-size: 0.8rem;
-            color: var(--text-secondary);
-        }
-
-        /* Empty State */
-        .empty-state {
-            text-align: center;
-            padding: 80px 20px;
-        }
-
-        .empty-state svg {
-            width: 64px;
-            height: 64px;
-            stroke: var(--border);
-            margin-bottom: 20px;
-        }
-
-        .empty-state h3 {
-            font-size: 1.25rem;
-            margin-bottom: 8px;
-            color: var(--text-secondary);
-        }
-
-        .empty-state p {
-            color: var(--text-muted);
-            margin-bottom: 20px;
-        }
-
-        /* Modal */
-        .modal-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.6);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 2000;
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.3s;
-            padding: 20px;
-        }
-
-        .modal-overlay.active {
-            opacity: 1;
-            visibility: visible;
-        }
-
-        .product-modal {
-            background: var(--bg-white);
-            border-radius: var(--radius-lg);
-            max-width: 900px;
-            width: 100%;
-            max-height: 90vh;
-            overflow: hidden;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            transform: scale(0.9);
-            transition: transform 0.3s;
-        }
-
-        .modal-overlay.active .product-modal {
-            transform: scale(1);
-        }
-
-        .modal-image {
-            background: linear-gradient(135deg, #f0f7f8, #e8f4f5);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            min-height: 400px;
-        }
-
-        .modal-image img {
-            max-width: 80%;
-            max-height: 80%;
-            object-fit: contain;
-        }
-
-        .modal-close {
-            position: absolute;
-            top: 16px;
-            right: 16px;
-            width: 36px;
-            height: 36px;
-            background: var(--bg-white);
-            border: none;
-            border-radius: 50%;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: var(--shadow-sm);
-            transition: all 0.2s;
-        }
-
-        .modal-close:hover {
-            background: var(--bg-light);
-        }
-
-        .modal-close svg {
-            width: 20px;
-            height: 20px;
-            stroke: var(--text-secondary);
-        }
-
-        .modal-content {
-            padding: 40px;
-            overflow-y: auto;
-        }
-
-        .modal-category {
-            font-size: 0.8rem;
-            color: var(--accent);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            font-weight: 600;
-            margin-bottom: 8px;
-        }
-
-        .modal-title {
-            font-size: 1.75rem;
-            margin-bottom: 16px;
-        }
-
-        .modal-description {
-            color: var(--text-secondary);
-            margin-bottom: 24px;
-            line-height: 1.7;
-        }
-
-        .modal-specs {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-            padding: 16px;
-            background: var(--bg-light);
-            border-radius: var(--radius-sm);
-            margin-bottom: 24px;
-        }
-
-        .spec-item {
-            font-size: 0.85rem;
-        }
-
-        .spec-item label {
-            color: var(--text-muted);
-            display: block;
-            margin-bottom: 2px;
-        }
-
-        .spec-item span {
-            color: var(--text-primary);
-            font-weight: 500;
-        }
-
-        .modal-sizes {
-            margin-bottom: 24px;
-        }
-
-        .modal-sizes label {
-            display: block;
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            margin-bottom: 10px;
-        }
-
-        .size-options {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-
-        .size-option {
-            padding: 12px 20px;
-            border: 2px solid var(--border);
-            border-radius: var(--radius-sm);
-            background: var(--bg-white);
-            cursor: pointer;
-            transition: all 0.2s;
-            text-align: center;
-            min-width: 100px;
-        }
-
-        .size-option:hover {
-            border-color: var(--primary);
-        }
-
-        .size-option.selected {
-            border-color: var(--primary);
-            background: rgba(10, 92, 107, 0.05);
-        }
-
-        .size-option .size-label {
-            display: block;
-            font-weight: 600;
-            margin-bottom: 4px;
-        }
-
-        .size-option .size-price {
-            font-size: 0.9rem;
-            color: var(--primary);
-            font-weight: 600;
-        }
-
-        .size-option .size-price.hidden {
-            color: var(--text-muted);
-            font-size: 0.8rem;
-        }
-
-        .modal-actions {
-            display: flex;
-            gap: 12px;
-        }
-
-        .btn-modal-add {
-            flex: 1;
-            padding: 16px;
-            background: var(--primary);
-            color: white;
-            border: none;
-            border-radius: var(--radius-md);
-            font-family: inherit;
-            font-weight: 600;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .btn-modal-add:hover {
-            background: var(--primary-dark);
-        }
-
-        .btn-modal-add:disabled {
-            background: var(--text-muted);
-            cursor: not-allowed;
-        }
-
-        /* Toast */
-        .toast {
-            position: fixed;
-            bottom: 24px;
-            right: 24px;
-            background: var(--primary-dark);
-            color: white;
-            padding: 16px 24px;
-            border-radius: var(--radius-md);
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            box-shadow: var(--shadow-lg);
-            transform: translateY(100px);
-            opacity: 0;
-            transition: all 0.3s;
-            z-index: 3000;
-        }
-
-        .toast.show {
-            transform: translateY(0);
-            opacity: 1;
-        }
-
-        .toast svg {
-            width: 20px;
-            height: 20px;
-            stroke: var(--accent);
-        }
-
-        /* Footer */
-        footer {
-            background: var(--primary-dark);
-            color: white;
-            padding: 60px 40px 30px;
-            margin-top: 60px;
-        }
-
-        .footer-content {
-            max-width: 1400px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: 2fr 1fr 1fr 1fr;
-            gap: 40px;
-        }
-
-        .footer-brand .logo {
-            color: white;
-            margin-bottom: 16px;
-        }
-
-        .footer-brand p {
-            color: rgba(255,255,255,0.7);
-            font-size: 0.9rem;
-            max-width: 280px;
-        }
-
-        .footer-links h4 {
-            font-size: 0.9rem;
-            margin-bottom: 16px;
-            color: var(--accent);
-        }
-
-        .footer-links a {
-            display: block;
-            color: rgba(255,255,255,0.7);
-            font-size: 0.9rem;
-            margin-bottom: 10px;
-            transition: color 0.2s;
-        }
-
+        .mobile-nav-toggle { display: none; background: none; border: none; cursor: pointer; padding: 8px; }
+        .mobile-nav-toggle svg { width: 24px; height: 24px; stroke: var(--text-primary); }
+        .page-content { padding: 112px 40px 60px; max-width: 1400px; margin: 0 auto; }
+        .page-header { margin-bottom: 32px; }
+        .page-header h1 { font-size: 2.5rem; margin-bottom: 8px; }
+        .page-header p { color: var(--text-secondary); font-size: 1.1rem; }
+        .catalog-layout { display: grid; grid-template-columns: 280px 1fr; gap: 40px; }
+        .sidebar { position: sticky; top: 112px; height: fit-content; }
+        .filter-section { background: var(--bg-white); border: 1px solid var(--border-light); border-radius: var(--radius-md); padding: 20px; margin-bottom: 16px; }
+        .filter-section h3 { font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 16px; }
+        .search-input { width: 100%; padding: 12px 14px; border: 1px solid var(--border); border-radius: var(--radius-sm); font-family: inherit; font-size: 0.9rem; }
+        .search-input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(11,75,142,0.1); }
+        .filter-group { display: flex; flex-direction: column; gap: 10px; }
+        .filter-checkbox { display: flex; align-items: center; gap: 10px; cursor: pointer; }
+        .filter-checkbox input { width: 18px; height: 18px; accent-color: var(--primary); }
+        .filter-checkbox span { font-size: 0.9rem; color: var(--text-secondary); }
+        .price-inputs { display: flex; align-items: center; gap: 10px; }
+        .price-inputs input { flex: 1; padding: 10px 12px; border: 1px solid var(--border); border-radius: var(--radius-sm); font-family: inherit; font-size: 0.9rem; width: 80px; }
+        .price-inputs input:focus { outline: none; border-color: var(--primary); }
+        .price-inputs span { color: var(--text-muted); }
+        .toolbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .results-count { font-size: 0.9rem; color: var(--text-secondary); }
+        .sort-select { padding: 10px 14px; border: 1px solid var(--border); border-radius: var(--radius-sm); font-family: inherit; font-size: 0.9rem; background: var(--bg-white); }
+        .active-filters { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+        .filter-tag { display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; background: rgba(11,75,142,0.1); color: var(--primary); border-radius: 20px; font-size: 0.8rem; font-weight: 500; }
+        .filter-tag button { background: none; border: none; cursor: pointer; padding: 0; display: flex; }
+        .filter-tag button svg { width: 14px; height: 14px; stroke: var(--primary); }
+        .products-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+        .product-card { background: var(--bg-white); border: 1px solid var(--border-light); border-radius: var(--radius-md); overflow: hidden; transition: all 0.2s; cursor: pointer; }
+        .product-card:hover { border-color: var(--border); box-shadow: var(--shadow-md); transform: translateY(-2px); }
+        .product-image { height: 180px; background: linear-gradient(135deg, #e8f0f8, #f0f4f8); display: flex; align-items: center; justify-content: center; position: relative; }
+        .product-placeholder { width: 80px; height: 80px; background: linear-gradient(135deg, var(--primary), var(--accent)); border-radius: 16px; display: flex; align-items: center; justify-content: center; opacity: 0.7; }
+        .product-placeholder svg { width: 40px; height: 40px; fill: white; }
+        .product-badge { position: absolute; top: 12px; left: 12px; padding: 4px 10px; background: var(--accent); color: white; font-size: 0.7rem; font-weight: 700; border-radius: 4px; text-transform: uppercase; }
+        .product-info { padding: 20px; }
+        .product-category { font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
+        .product-name { font-size: 1.1rem; font-weight: 600; margin-bottom: 8px; }
+        .product-meta { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; font-size: 0.85rem; color: var(--text-secondary); }
+        .product-price { font-size: 1.25rem; font-weight: 700; color: var(--primary); }
+        .product-price.hidden-price { font-size: 0.9rem; color: var(--text-muted); font-weight: 500; }
+        .product-sizes { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
+        .size-tag { padding: 4px 10px; background: var(--bg-light); border-radius: 4px; font-size: 0.8rem; color: var(--text-secondary); }
+        .empty-state { text-align: center; padding: 80px 20px; }
+        .empty-state svg { width: 64px; height: 64px; stroke: var(--border); margin-bottom: 20px; }
+        .empty-state h3 { font-size: 1.25rem; margin-bottom: 8px; color: var(--text-secondary); }
+        .empty-state p { color: var(--text-muted); margin-bottom: 20px; }
+        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); display: flex; align-items: center; justify-content: center; z-index: 2000; opacity: 0; visibility: hidden; transition: all 0.3s; padding: 20px; }
+        .modal-overlay.active { opacity: 1; visibility: visible; }
+        .product-modal { background: var(--bg-white); border-radius: var(--radius-lg); max-width: 900px; width: 100%; max-height: 90vh; overflow: hidden; display: grid; grid-template-columns: 1fr 1fr; transform: scale(0.9); transition: transform 0.3s; }
+        .modal-overlay.active .product-modal { transform: scale(1); }
+        .modal-image { background: linear-gradient(135deg, #e8f0f8, #f0f4f8); display: flex; align-items: center; justify-content: center; position: relative; min-height: 400px; }
+        .modal-close { position: absolute; top: 16px; right: 16px; width: 36px; height: 36px; background: var(--bg-white); border: none; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+        .modal-close svg { width: 20px; height: 20px; stroke: var(--text-secondary); }
+        .modal-content { padding: 40px; overflow-y: auto; }
+        .modal-category { font-size: 0.8rem; color: var(--accent); text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600; margin-bottom: 8px; }
+        .modal-title { font-size: 1.75rem; margin-bottom: 16px; }
+        .modal-description { color: var(--text-secondary); margin-bottom: 24px; line-height: 1.7; }
+        .modal-specs { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 16px; background: var(--bg-light); border-radius: var(--radius-sm); margin-bottom: 24px; }
+        .spec-item { font-size: 0.85rem; }
+        .spec-item label { color: var(--text-muted); display: block; margin-bottom: 2px; }
+        .spec-item span { color: var(--text-primary); font-weight: 500; }
+        .modal-sizes { margin-bottom: 24px; }
+        .modal-sizes label { display: block; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 10px; }
+        .size-select { width: 100%; padding: 14px 16px; border: 2px solid var(--border); border-radius: var(--radius-sm); font-family: inherit; font-size: 1rem; background: var(--bg-white); }
+        .size-select:focus { outline: none; border-color: var(--primary); }
+        .size-select.error { border-color: #e53e3e; }
+        .size-error { color: #e53e3e; font-size: 0.85rem; margin-top: 8px; display: none; }
+        .size-error.show { display: block; }
+        .btn-modal-add { width: 100%; padding: 16px; background: var(--primary); color: white; border: none; border-radius: var(--radius-md); font-family: inherit; font-weight: 600; font-size: 1rem; cursor: pointer; }
+        .btn-modal-add:hover { background: var(--primary-dark); }
+        .toast { position: fixed; bottom: 24px; right: 24px; background: var(--primary-dark); color: white; padding: 16px 24px; border-radius: var(--radius-md); display: flex; align-items: center; gap: 12px; box-shadow: var(--shadow-lg); transform: translateY(100px); opacity: 0; transition: all 0.3s; z-index: 3000; }
+        .toast.show { transform: translateY(0); opacity: 1; }
+        .toast svg { width: 20px; height: 20px; stroke: var(--accent); }
+        footer { background: var(--primary-dark); color: white; padding: 60px 40px 30px; margin-top: 60px; }
+        .footer-content { max-width: 1400px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 40px; }
+        .footer-brand p { color: rgba(255,255,255,0.7); font-size: 0.9rem; max-width: 280px; margin-top: 16px; }
+        .footer-links h4 { font-size: 0.9rem; margin-bottom: 16px; color: var(--accent); }
+        .footer-links a { display: block; color: rgba(255,255,255,0.7); font-size: 0.9rem; margin-bottom: 10px; }
         .footer-links a:hover { color: white; }
-
-        .footer-bottom {
-            max-width: 1400px;
-            margin: 40px auto 0;
-            padding-top: 20px;
-            border-top: 1px solid rgba(255,255,255,0.1);
-            text-align: center;
-            color: rgba(255,255,255,0.5);
-            font-size: 0.85rem;
-        }
-
+        .footer-bottom { max-width: 1400px; margin: 40px auto 0; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.1); text-align: center; color: rgba(255,255,255,0.5); font-size: 0.85rem; }
         .hidden { display: none !important; }
-
-        @media (max-width: 1100px) {
-            .products-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-
-        @media (max-width: 900px) {
-            nav { display: none; }
-            .mobile-nav-toggle { display: block; }
-            .header-inner { padding: 0 20px; }
-            .page-content { padding: 100px 20px 40px; }
-            .catalog-layout {
-                grid-template-columns: 1fr;
-            }
-            .sidebar {
-                position: static;
-                display: grid;
-                grid-template-columns: repeat(2, 1fr);
-                gap: 12px;
-            }
-            .filter-section {
-                margin-bottom: 0;
-            }
-            .product-modal {
-                grid-template-columns: 1fr;
-                max-height: 95vh;
-            }
-            .modal-image {
-                min-height: 250px;
-            }
-            .modal-content {
-                padding: 24px;
-            }
-            .footer-content {
-                grid-template-columns: 1fr 1fr;
-            }
-        }
-
-        @media (max-width: 600px) {
-            .products-grid {
-                grid-template-columns: 1fr;
-            }
-            .sidebar {
-                grid-template-columns: 1fr;
-            }
-            .toolbar {
-                flex-direction: column;
-                gap: 12px;
-                align-items: stretch;
-            }
-            .footer-content {
-                grid-template-columns: 1fr;
-            }
-        }
+        @media (max-width: 1100px) { .products-grid { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 900px) { nav,.header-search { display: none; } .mobile-nav-toggle { display: block; } .header-inner { padding: 0 20px; } .page-content { padding: 100px 20px 40px; } .catalog-layout { grid-template-columns: 1fr; } .sidebar { position: static; } .product-modal { grid-template-columns: 1fr; } .modal-image { min-height: 200px; } .modal-content { padding: 24px; } .footer-content { grid-template-columns: 1fr 1fr; } }
+        @media (max-width: 600px) { .products-grid { grid-template-columns: 1fr; } .toolbar { flex-direction: column; gap: 12px; align-items: stretch; } .footer-content { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
-    <!-- Header -->
-    <header>
-        <div class="header-inner">
-            <a href="index.html" class="logo">
-                <img src="logo.png" alt="Pepstar Peptides" class="logo-img">
-                Pepstar Peptides
-            </a>
-            <nav>
-                <a href="catalog.html" class="active">Catalog</a>
-                <a href="about.html">About</a>
-                <a href="faq.html">FAQ</a>
-                <a href="contact.html">Contact</a>
-            </nav>
-            <div class="header-actions">
-                <a href="cart.html" class="cart-btn">
-                    <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
-                    <span class="cart-count" id="cartCount">0</span>
-                </a>
-                <a href="login.html" class="btn-primary">Member Login</a>
-            </div>
-            <button class="mobile-nav-toggle">
-                <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
-            </button>
+    <header><div class="header-inner">
+        <a href="index.html" class="logo"><img src="logo.png" alt="Pepstar Peptides" class="logo-img"></a>
+        <nav><a href="catalog.html" class="active">Catalog</a><a href="about.html">About</a><a href="faq.html">FAQ</a><a href="contact.html">Contact</a></nav>
+        <div class="header-actions">
+            <div class="header-search"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><input type="text" id="headerSearchInput" placeholder="Search peptides..."></div>
+            <a href="cart.html" class="cart-btn"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg><span class="cart-count" id="cartCount">0</span></a>
+            <a href="login.html" class="btn-primary">Member Login</a>
         </div>
-    </header>
+        <button class="mobile-nav-toggle"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
+    </div></header>
 
-    <!-- Page Content -->
     <div class="page-content">
-        <div class="page-header">
-            <h1>Research Peptide Catalog</h1>
-            <p>Premium peptides for qualified researchers. All products undergo rigorous third-party testing.</p>
-        </div>
-
+        <div class="page-header"><h1>Research Peptide Catalog</h1><p>Premium peptides for qualified researchers. All products undergo rigorous third-party testing. COA available upon request.</p></div>
         <div class="catalog-layout">
-            <!-- Sidebar -->
             <aside class="sidebar">
-                <div class="filter-section">
-                    <h3>Search</h3>
-                    <input type="text" class="search-input" id="searchInput" placeholder="Search peptides...">
-                </div>
-
-                <div class="filter-section">
-                    <h3>Categories</h3>
-                    <div class="filter-group" id="categoryFilters">
-                        <!-- Generated by JS -->
-                    </div>
-                </div>
-
-                <div class="filter-section">
-                    <h3>Price Range</h3>
-                    <div class="price-inputs">
-                        <input type="number" id="priceMin" placeholder="Min">
-                        <span>-</span>
-                        <input type="number" id="priceMax" placeholder="Max">
-                    </div>
-                </div>
+                <div class="filter-section"><h3>Search</h3><input type="text" class="search-input" id="searchInput" placeholder="Search peptides..."></div>
+                <div class="filter-section"><h3>Categories</h3><div class="filter-group" id="categoryFilters"></div></div>
+                <div class="filter-section"><h3>Price Range</h3><div class="price-inputs"><input type="number" id="priceMin" placeholder="Min"><span>-</span><input type="number" id="priceMax" placeholder="Max"></div></div>
             </aside>
-
-            <!-- Main Content -->
             <main class="main-content">
-                <div class="toolbar">
-                    <span class="results-count" id="resultsCount">0 products</span>
-                    <select class="sort-select" id="sortSelect">
-                        <option value="popularity">Sort by Popularity</option>
-                        <option value="name-asc">Name: A to Z</option>
-                        <option value="name-desc">Name: Z to A</option>
-                        <option value="price-asc">Price: Low to High</option>
-                        <option value="price-desc">Price: High to Low</option>
-                    </select>
-                </div>
-
+                <div class="toolbar"><span class="results-count" id="resultsCount">0 products</span><select class="sort-select" id="sortSelect"><option value="name-asc">Name: A to Z</option><option value="name-desc">Name: Z to A</option><option value="price-asc">Price: Low to High</option><option value="price-desc">Price: High to Low</option></select></div>
                 <div class="active-filters" id="activeFilters"></div>
-
-                <div class="products-grid" id="productsGrid">
-                    <!-- Products inserted by JS -->
-                </div>
-
-                <div class="empty-state hidden" id="emptyState">
-                    <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-                    <h3>No Products Found</h3>
-                    <p>Try adjusting your filters or search terms</p>
-                    <button class="btn-primary" onclick="resetFilters()">Clear All Filters</button>
-                </div>
+                <div class="products-grid" id="productsGrid"></div>
+                <div class="empty-state hidden" id="emptyState"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><h3>No Products Found</h3><p>Try adjusting your filters or search terms</p><button class="btn-primary" onclick="resetFilters()">Clear All Filters</button></div>
             </main>
         </div>
     </div>
 
-    <!-- Product Modal -->
-    <div class="modal-overlay" id="productModal">
-        <div class="product-modal">
-            <div class="modal-image">
-                <button class="modal-close" onclick="closeModal()">
-                    <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-                </button>
-                <div class="product-placeholder">
-                    <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-                </div>
-            </div>
-            <div class="modal-content">
-                <div class="modal-category" id="modalCategory"></div>
-                <h2 class="modal-title" id="modalTitle"></h2>
-                <p class="modal-description" id="modalDescription"></p>
-                <div class="modal-specs" id="modalSpecs"></div>
-                <div class="modal-sizes" id="modalSizesSection">
-                    <label>Select Size</label>
-                    <div class="size-options" id="modalSizes"></div>
-                </div>
-                <div class="modal-actions">
-                    <button class="btn-modal-add" id="modalAddBtn" onclick="addModalToCart()">Add to Cart</button>
-                </div>
-            </div>
+    <div class="modal-overlay" id="productModal"><div class="product-modal">
+        <div class="modal-image"><button class="modal-close" onclick="closeModal()"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button><div class="product-placeholder"><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div></div>
+        <div class="modal-content">
+            <div class="modal-category" id="modalCategory"></div><h2 class="modal-title" id="modalTitle"></h2><p class="modal-description" id="modalDescription"></p>
+            <div class="modal-specs" id="modalSpecs"></div>
+            <div class="modal-sizes"><label>Select Size <span style="color:#e53e3e">*</span></label><select class="size-select" id="modalSizeSelect"><option value="">-- Choose a size --</option></select><div class="size-error" id="sizeError">Please select a size before adding to cart</div></div>
+            <button class="btn-modal-add" onclick="addModalToCart()">Add to Cart</button>
         </div>
-    </div>
+    </div></div>
 
-    <!-- Toast -->
-    <div class="toast" id="toast">
-        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-        <span id="toastMessage">Added to cart</span>
-    </div>
+    <div class="toast" id="toast"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg><span id="toastMessage">Added to cart</span></div>
 
-    <!-- Footer -->
-    <footer>
-        <div class="footer-content">
-            <div class="footer-brand">
-                <a href="index.html" class="logo">
-                    <img src="logo.png" alt="Pepstar Peptides" class="logo-img">
-                    Pepstar Peptides
-                </a>
-                <p>Premium research peptides for qualified researchers. Committed to purity, quality, and scientific advancement.</p>
-            </div>
-            <div class="footer-links">
-                <h4>Products</h4>
-                <a href="catalog.html">Full Catalog</a>
-                <a href="catalog.html?category=Tissue%20Repair">Tissue Repair</a>
-                <a href="catalog.html?category=GH%20Secretagogues">GH Secretagogues</a>
-                <a href="catalog.html?category=Metabolic">Metabolic</a>
-            </div>
-            <div class="footer-links">
-                <h4>Company</h4>
-                <a href="about.html">About Us</a>
-                <a href="faq.html">FAQ</a>
-                <a href="contact.html">Contact</a>
-            </div>
-            <div class="footer-links">
-                <h4>Account</h4>
-                <a href="login.html">Member Login</a>
-                <a href="register.html">Apply for Account</a>
-                <a href="cart.html">View Cart</a>
-            </div>
-        </div>
-        <div class="footer-bottom">
-            <p>© 2025 Pepstar Peptides. All products are for research purposes only. Not for human consumption.</p>
-        </div>
-    </footer>
+    <footer><div class="footer-content">
+        <div class="footer-brand"><a href="index.html" class="logo"><img src="logo.png" alt="Pepstar Peptides" class="logo-img"></a><p>Premium research peptides for qualified researchers.</p></div>
+        <div class="footer-links"><h4>Products</h4><a href="catalog.html">Full Catalog</a><a href="catalog.html?category=Tissue%20Repair">Tissue Repair</a><a href="catalog.html?category=GH%20Secretagogues">GH Secretagogues</a></div>
+        <div class="footer-links"><h4>Company</h4><a href="about.html">About Us</a><a href="faq.html">FAQ</a><a href="contact.html">Contact</a></div>
+        <div class="footer-links"><h4>Account</h4><a href="login.html">Member Login</a><a href="register.html">Apply for Account</a><a href="cart.html">View Cart</a></div>
+    </div><div class="footer-bottom">&copy; 2025 Pepstar Peptides. For research purposes only.</div></footer>
 
     <script>
-        // Product Data - Full Catalog
-        const products = [
-            // Metabolic Research Peptides
-            { id: 'tirzepatide-10', name: 'Tirzepatide', category: 'Metabolic Research', description: 'A novel dual GIP and GLP-1 receptor agonist peptide representing the latest advancement in metabolic research. This synthetic peptide demonstrates high binding affinity to both incretin receptors, making it valuable for studies examining glucose-dependent insulin secretion, appetite regulation, and energy homeostasis mechanisms.', sizes: ['10mg'], prices: { '10mg': 60 }, purity: '99%+', form: 'Lyophilized Powder', specs: { formula: 'C225H348N48O68', weight: '4813.5 g/mol' }, badge: 'Popular', popularity: 10 },
-            { id: 'tirzepatide-20', name: 'Tirzepatide', category: 'Metabolic Research', description: 'A novel dual GIP and GLP-1 receptor agonist peptide representing the latest advancement in metabolic research. This synthetic peptide demonstrates high binding affinity to both incretin receptors, making it valuable for studies examining glucose-dependent insulin secretion, appetite regulation, and energy homeostasis mechanisms.', sizes: ['20mg'], prices: { '20mg': 100 }, purity: '99%+', form: 'Lyophilized Powder', specs: { formula: 'C225H348N48O68', weight: '4813.5 g/mol' }, popularity: 9 },
-            { id: 'retatrutide-10', name: 'Retatrutide', category: 'Metabolic Research', description: 'A triple agonist peptide targeting GIP, GLP-1, and glucagon receptors simultaneously. This innovative research compound enables investigation of multi-receptor metabolic pathway activation and its effects on energy expenditure, glucose metabolism, and lipid profiles in preclinical models.', sizes: ['10mg'], prices: { '10mg': 60 }, purity: '99%+', form: 'Lyophilized Powder', specs: { formula: 'C₂₃₇H₃₆₆N₆₆O₇₂S', weight: '5414.0 g/mol' }, badge: 'New', popularity: 9 },
-            { id: 'retatrutide-20', name: 'Retatrutide', category: 'Metabolic Research', description: 'A triple agonist peptide targeting GIP, GLP-1, and glucagon receptors simultaneously. This innovative research compound enables investigation of multi-receptor metabolic pathway activation and its effects on energy expenditure, glucose metabolism, and lipid profiles in preclinical models.', sizes: ['20mg'], prices: { '20mg': 100 }, purity: '99%+', form: 'Lyophilized Powder', specs: { formula: 'C₂₃₇H₃₆₆N₆₆O₇₂S', weight: '5414.0 g/mol' }, popularity: 8 },
-            { id: 'retatrutide-30', name: 'Retatrutide', category: 'Metabolic Research', description: 'A triple agonist peptide targeting GIP, GLP-1, and glucagon receptors simultaneously. This innovative research compound enables investigation of multi-receptor metabolic pathway activation and its effects on energy expenditure, glucose metabolism, and lipid profiles in preclinical models.', sizes: ['30mg'], prices: { '30mg': 140 }, purity: '99%+', form: 'Lyophilized Powder', specs: { formula: 'C₂₃₇H₃₆₆N₆₆O₇₂S', weight: '5414.0 g/mol' }, popularity: 7 },
-            { id: 'cagrilintide', name: 'Cagrilintide', category: 'Metabolic Research', description: 'A long-acting amylin analog peptide designed for metabolic research applications. Studied for its effects on gastric emptying, glucagon suppression, and satiety signaling pathways. Valuable for investigating amylin receptor-mediated metabolic regulation.', sizes: ['10mg'], prices: { '10mg': 80 }, purity: '99%+', form: 'Lyophilized Powder', specs: { formula: 'C₁₇₆H₂₇₆N₅₀O₅₃S₂', weight: '3990.8 g/mol' }, popularity: 7 },
-            { id: 'aod-9604', name: 'AOD-9604', category: 'Metabolic Research', description: 'A modified fragment (176-191) of the human growth hormone C-terminus. This peptide has been extensively studied for its role in lipolysis and fat metabolism without affecting IGF-1 levels or blood glucose. Useful for research into targeted metabolic pathways.', sizes: ['10mg'], prices: { '10mg': 80 }, purity: '99%+', form: 'Lyophilized Powder', specs: { formula: 'C78H125N23O23S2', weight: '1817.1 g/mol' }, popularity: 6 },
-            { id: '5-amino-1mq', name: '5-Amino-1MQ', category: 'Metabolic Research', description: 'A small molecule inhibitor of nicotinamide N-methyltransferase (NNMT). Research indicates this compound may influence cellular NAD+ levels and energy metabolism. Studied for its potential role in metabolic regulation and cellular energetics research.', sizes: ['50mg'], prices: { '50mg': 100 }, purity: '99%+', form: 'Lyophilized Powder', specs: { formula: 'C11H13N3O', weight: '203.24 g/mol' }, popularity: 6 },
-
-            // Tissue Repair Peptides
-            { id: 'bpc-157', name: 'BPC-157', category: 'Tissue Repair', description: 'Body Protection Compound-157 is a pentadecapeptide consisting of 15 amino acids derived from human gastric juice. Extensively researched for tissue repair mechanisms, angiogenesis, and cytoprotective properties. One of the most studied peptides for wound healing and regeneration research.', sizes: ['10mg'], prices: { '10mg': 40 }, purity: '99%+', form: 'Lyophilized Powder', specs: { formula: 'C62H98N16O22', weight: '1419.5 g/mol' }, badge: 'Best Seller', popularity: 10 },
-            { id: 'tb-500', name: 'TB-500', category: 'Tissue Repair', description: 'Thymosin Beta-4 is a 43-amino acid peptide naturally found in all human and animal cells. Research focuses on its role in cell migration, blood vessel formation, and tissue regeneration. Contains the active site responsible for actin sequestration and cell motility.', sizes: ['10mg'], prices: { '10mg': 40 }, purity: '99%+', form: 'Lyophilized Powder', specs: { formula: 'C212H350N56O78S', weight: '4963.4 g/mol' }, popularity: 9 },
-            { id: 'bpc-tb-blend-10', name: 'BPC-157 + TB-500 Wolverine', category: 'Tissue Repair', description: 'A synergistic research blend combining two of the most studied tissue repair peptides. This combination allows researchers to investigate potential complementary mechanisms in wound healing, angiogenesis, and cellular regeneration studies.', sizes: ['10mg'], prices: { '10mg': 60 }, purity: '99%+', form: 'Lyophilized Powder', specs: { formula: 'Blend', weight: 'Varies' }, badge: 'Bundle', popularity: 9 },
-            { id: 'bpc-tb-blend-20', name: 'BPC-157 + TB-500 Wolverine', category: 'Tissue Repair', description: 'A synergistic research blend combining two of the most studied tissue repair peptides. This combination allows researchers to investigate potential complementary mechanisms in wound healing, angiogenesis, and cellular regeneration studies.', sizes: ['20mg'], prices: { '20mg': 110 }, purity: '99%+', form: 'Lyophilized Powder', specs: { formula: 'Blend', weight: 'Varies' }, popularity: 8 },
-            { id: 'vip', name: 'VIP', category: 'Tissue Repair', description: 'Vasoactive Intestinal Peptide is a 28-amino acid neuropeptide with diverse physiological functions. Researched for its vasodilatory, immunomodulatory, and neuroprotective properties. Important for studies involving smooth muscle relaxation and inflammatory responses.', sizes: ['10mg'], prices: { '10mg': 70 }, purity: '99%+', form: 'Lyophilized Powder', specs: { formula: 'C147H237N43O44S', weight: '3326.8 g/mol' }, popularity: 5 },
-            { id: 'kpv', name: 'KPV', category: 'Tissue Repair', description: 'A tripeptide derived from alpha-melanocyte stimulating hormone (α-MSH). Research indicates anti-inflammatory properties through NF-κB pathway modulation. Studied for its potential in inflammatory response research and mucosal healing studies.', sizes: ['10mg'], prices: { '10mg': 40 }, purity: '99%+', form: 'Lyophilized Powder', specs: { formula: 'C16H30N4O4', weight: '342.43 g/mol' }, popularity: 6 },
-
-            // GH Secretagogues
-            { id: 'ipamorelin', name: 'Ipamorelin', category: 'GH Secretagogues', description: 'A highly selective growth hormone secretagogue and ghrelin mimetic pentapeptide. Distinguished by its specificity for GH release without significant effects on cortisol, prolactin, or ACTH. Ideal for clean GH axis research protocols.', sizes: ['10mg'], prices: { '10mg': 40 }, purity: '99%+', form: 'Lyophilized Powder', specs: { formula: 'C38H49N9O5', weight: '711.9 g/mol' }, popularity: 8 },
-            { id: 'sermorelin', name: 'Sermorelin', category: 'GH Secretagogues', description: 'A growth hormone-releasing hormone (GHRH) analog consisting of the first 29 amino acids of endogenous GHRH. Stimulates physiological GH release through the GHRH receptor. Widely used in GH axis and pituitary function research.', sizes: ['10mg'], prices: { '10mg': 50 }, purity: '99%+', form: 'Lyophilized Powder', specs: { formula: 'C149H246N44O42S', weight: '3357.9 g/mol' }, popularity: 7 },
-            { id: 'tesamorelin-10', name: 'Tesamorelin', category: 'GH Secretagogues', description: 'A stabilized GHRH analog with a trans-3-hexenoic acid modification that enhances stability and potency. Research focuses on its robust GH-releasing properties and applications in lipodystrophy and metabolic studies.', sizes: ['10mg'], prices: { '10mg': 60 }, purity: '99%+', form: 'Lyophilized Powder', specs: { formula: 'C221H366N72O67S', weight: '5135.9 g/mol' }, popularity: 7 },
-            { id: 'tesamorelin-15', name: 'Tesamorelin', category: 'GH Secretagogues', description: 'A stabilized GHRH analog with a trans-3-hexenoic acid modification that enhances stability and potency. Research focuses on its robust GH-releasing properties and applications in lipodystrophy and metabolic studies.', sizes: ['15mg'], prices: { '15mg': 85 }, purity: '99%+', form: 'Lyophilized Powder', specs: { formula: 'C221H366N72O67S', weight: '5135.9 g/mol' }, popularity: 6 },
-            { id: 'cjc-1295-no-dac', name: 'CJC-1295 No DAC', category: 'GH Secretagogues', description: 'Modified Growth Hormone Releasing Factor (Mod GRF 1-29) with amino acid substitutions for enhanced stability. Produces pulsatile GH release mimicking natural secretion patterns. Essential for physiological GH research protocols.', sizes: ['10mg'], prices: { '10mg': 50 }, purity: '99%+', form: 'Lyophilized Powder', specs: { formula: 'C152H252N44O42', weight: '3367.9 g/mol' }, popularity: 8 },
-            { id: 'hgh-191aa', name: 'HGH-191aa', category: 'GH Secretagogues', description: 'Recombinant human growth hormone consisting of 191 amino acids identical to endogenous pituitary-derived GH. The reference standard for growth hormone research applications and bioequivalence studies.', sizes: ['15iu'], prices: { '15iu': 45 }, purity: '99%+', form: 'Lyophilized Powder', specs: { formula: 'C990H1529N263O299S7', weight: '22124 g/mol' }, popularity: 7 },
-            { id: 'hcg', name: 'HCG', category: 'GH Secretagogues', description: 'Human Chorionic Gonadotropin is a glycoprotein hormone used extensively in reproductive and endocrine research. Mimics luteinizing hormone activity and is valuable for studies involving gonadal function and steroidogenesis.', sizes: ['5000iu'], prices: { '5000iu': 45 }, purity: '99%+', form: 'Lyophilized Powder', specs: { formula: 'Glycoprotein', weight: '36.7 kDa' }, popularity: 6 },
-            { id: 'slu-pp-322', name: 'SLU-PP-322', category: 'GH Secretagogues', description: 'A novel growth hormone secretagogue peptide developed for research into GH release mechanisms. Demonstrates unique binding characteristics to the ghrelin receptor. Useful for comparative GHSR agonist studies.', sizes: ['5mg'], prices: { '5mg': 40 }, purity: '99%+', form: 'Lyophilized Powder', specs: { formula: 'Research Compound', weight: 'Varies' }, popularity: 4 },
-
-            // Nootropic & Longevity
-            { id: 'nad-plus', name: 'NAD+', category: 'Longevity Research', description: 'Nicotinamide Adenine Dinucleotide in its oxidized form, a critical coenzyme in cellular metabolism. Essential for mitochondrial function, DNA repair, and sirtuin activation. Foundational for aging and cellular energy research.', sizes: ['100mg'], prices: { '100mg': 30 }, purity: '99%+', form: 'Lyophilized Powder', specs: { formula: 'C21H27N7O14P2', weight: '663.43 g/mol' }, popularity: 8 },
-            { id: 'ss31', name: 'SS31 (Elamipretide)', category: 'Longevity Research', description: 'A mitochondria-targeting tetrapeptide that concentrates in the inner mitochondrial membrane. Researched for its effects on cardiolipin stabilization, electron transport chain function, and ATP production. Key compound in mitochondrial dysfunction studies.', sizes: ['10mg'], prices: { '10mg': 45 }, purity: '99%+', form: 'Lyophilized Powder', specs: { formula: 'C32H49N9O5', weight: '639.78 g/mol' }, popularity: 6 },
-            { id: 'mots-c-10', name: 'MOTS-c', category: 'Longevity Research', description: 'A mitochondrial-derived peptide encoded within the 12S rRNA gene. Research indicates involvement in metabolic homeostasis, insulin sensitivity, and exercise mimetic effects. Important for mitochondrial signaling and metabolic research.', sizes: ['10mg'], prices: { '10mg': 40 }, purity: '99%+', form: 'Lyophilized Powder', specs: { formula: 'C101H152N28O22S2', weight: '2174.64 g/mol' }, popularity: 6 },
-            { id: 'mots-c-40', name: 'MOTS-c', category: 'Longevity Research', description: 'A mitochondrial-derived peptide encoded within the 12S rRNA gene. Research indicates involvement in metabolic homeostasis, insulin sensitivity, and exercise mimetic effects. Important for mitochondrial signaling and metabolic research.', sizes: ['40mg'], prices: { '40mg': 100 }, purity: '99%+', form: 'Lyophilized Powder', specs: { formula: 'C101H152N28O22S2', weight: '2174.64 g/mol' }, popularity: 5 },
-            { id: 'glutathione', name: 'Glutathione', category: 'Longevity Research', description: 'The master antioxidant tripeptide (γ-glutamyl-cysteinyl-glycine) found in virtually all cells. Essential for detoxification, immune function, and oxidative stress protection. Critical component in redox biology and antioxidant research.', sizes: ['1500mg'], prices: { '1500mg': 65 }, purity: '99%+', form: 'Lyophilized Powder', specs: { formula: 'C10H17N3O6S', weight: '307.32 g/mol' }, popularity: 7 },
-            { id: 'testagen', name: 'Testagen', category: 'Longevity Research', description: 'A bioregulator tetrapeptide researched for its effects on testicular function and testosterone synthesis pathways. Part of the Khavinson peptide bioregulator family studied for tissue-specific gene expression modulation.', sizes: ['20mg'], prices: { '20mg': 90 }, purity: '99%+', form: 'Lyophilized Powder', specs: { formula: 'Tetrapeptide', weight: 'Varies' }, popularity: 5 },
-            { id: 'semax', name: 'Semax', category: 'Nootropic Research', description: 'A synthetic heptapeptide analog of ACTH(4-10) developed for neuroprotective research. Studies indicate effects on BDNF expression, cognitive function, and neuroplasticity. Valuable for neuroscience and cognitive enhancement research.', sizes: ['10mg'], prices: { '10mg': 40 }, purity: '99%+', form: 'Lyophilized Powder', specs: { formula: 'C37H51N9O10S', weight: '813.9 g/mol' }, popularity: 7 },
-            { id: 'selank', name: 'Selank', category: 'Nootropic Research', description: 'A synthetic peptide analog of tuftsin with anxiolytic and nootropic properties in research models. Studied for effects on GABA system modulation, immune function, and stress response. Important for anxiety and immunomodulation research.', sizes: ['10mg'], prices: { '10mg': 40 }, purity: '99%+', form: 'Lyophilized Powder', specs: { formula: 'C33H57N11O9', weight: '751.9 g/mol' }, popularity: 6 },
-            { id: 'mt1', name: 'MT-1 (Melanotan I)', category: 'Research Peptides', description: 'An analog of alpha-melanocyte stimulating hormone (α-MSH) that activates melanocortin receptors. Researched for melanogenesis, photoprotection, and MC1R pathway studies. Important for dermatological and pigmentation research.', sizes: ['10mg'], prices: { '10mg': 30 }, purity: '99%+', form: 'Lyophilized Powder', specs: { formula: 'C78H111N21O19', weight: '1646.85 g/mol' }, popularity: 5 },
-            { id: 'ghk-cu', name: 'GHK-Cu', category: 'Longevity Research', description: 'A naturally occurring copper-binding tripeptide found in human plasma, saliva, and urine. Extensively researched for wound healing, collagen synthesis, and anti-aging mechanisms. Demonstrates gene-modulating effects on over 4,000 genes.', sizes: ['100mg'], prices: { '100mg': 60 }, purity: '99%+', form: 'Lyophilized Powder', specs: { formula: 'C14H24CuN6O4', weight: '403.9 g/mol' }, popularity: 7 },
-            { id: 'kisspeptin', name: 'Kisspeptin', category: 'Research Peptides', description: 'A neuropeptide that plays a critical role in reproductive hormone regulation through GnRH neuron activation. Essential for research in puberty onset, fertility, and hypothalamic-pituitary-gonadal axis function.', sizes: ['10mg'], prices: { '10mg': 50 }, purity: '99%+', form: 'Lyophilized Powder', specs: { formula: 'C63H83N17O14', weight: '1302.45 g/mol' }, popularity: 5 },
-            { id: 'oxytocin', name: 'Oxytocin Acetate', category: 'Research Peptides', description: 'A nine-amino acid neuropeptide hormone involved in social bonding, reproduction, and stress regulation. Widely studied in behavioral neuroscience for its effects on trust, empathy, and social cognition.', sizes: ['10mg'], prices: { '10mg': 70 }, purity: '99%+', form: 'Lyophilized Powder', specs: { formula: 'C43H66N12O12S2', weight: '1007.19 g/mol' }, popularity: 5 },
-            { id: 'thymosin-alpha-1', name: 'Thymosin Alpha-1 (TA1)', category: 'Research Peptides', description: 'A 28-amino acid thymic peptide with potent immunomodulatory properties. Researched for T-cell maturation, dendritic cell function, and immune response enhancement. Important for immunology and infectious disease research.', sizes: ['10mg'], prices: { '10mg': 60 }, purity: '99%+', form: 'Lyophilized Powder', specs: { formula: 'C129H215N33O55', weight: '3108.29 g/mol' }, popularity: 6 },
-            { id: 'klow', name: 'KLOW', category: 'Longevity Research', description: 'A research peptide studied for its potential effects on metabolic and longevity pathways. Investigated in preclinical models for cellular health and aging-related research applications.', sizes: ['80mg'], prices: { '80mg': 100 }, purity: '99%+', form: 'Lyophilized Powder', specs: { formula: 'Research Compound', weight: 'Varies' }, popularity: 4 },
-
-            // Bioregulator Peptides
-            { id: 'bronchogen', name: 'Bronchogen', category: 'Bioregulator Peptides', description: 'A Khavinson bioregulator tetrapeptide (Ala-Glu-Asp-Leu) researched for respiratory tissue effects. Part of the Russian bioregulator peptide research program studying tissue-specific gene expression and cellular function optimization.', sizes: ['20mg'], prices: { '20mg': 80 }, purity: '99%+', form: 'Lyophilized Powder', specs: { formula: 'C18H30N4O9', weight: '446.45 g/mol' }, popularity: 4 },
-            { id: 'cardiogen', name: 'Cardiogen', category: 'Bioregulator Peptides', description: 'A tetrapeptide bioregulator (Ala-Glu-Asp-Arg) studied for effects on cardiac tissue. Research focuses on cardiomyocyte function and cardiovascular tissue support. Part of the Khavinson peptide bioregulator research program.', sizes: ['20mg'], prices: { '20mg': 80 }, purity: '99%+', form: 'Lyophilized Powder', specs: { formula: 'C18H32N6O8', weight: '460.48 g/mol' }, popularity: 4 },
-            { id: 'prostamax', name: 'Prostamax', category: 'Bioregulator Peptides', description: 'A bioregulator peptide complex researched for prostate tissue effects. Studied for cellular function optimization in prostate tissue models. Part of the comprehensive Khavinson bioregulator peptide research series.', sizes: ['20mg'], prices: { '20mg': 80 }, purity: '99%+', form: 'Lyophilized Powder', specs: { formula: 'Peptide Complex', weight: 'Varies' }, popularity: 4 }
-        ];
-
-        const categories = [...new Set(products.map(p => p.category))];
-
-        let activeFilters = {
-            search: '',
-            categories: [],
-            priceMin: null,
-            priceMax: null,
-            sort: 'popularity'
-        };
-
-        let currentModalProduct = null;
-        let selectedSize = null;
-
-        // Check if user is approved member
-        function isApprovedMember() {
-            const user = JSON.parse(localStorage.getItem('peptideUser') || '{}');
-            return user.approved === true;
-        }
-
-        // Cart functions
-        function getCart() {
-            return JSON.parse(localStorage.getItem('peptideCart') || '[]');
-        }
-
-        function saveCart(cart) {
-            localStorage.setItem('peptideCart', JSON.stringify(cart));
-            updateCartCount();
-        }
-
-        function addToCart(productId, size) {
-            const product = products.find(p => p.id === productId);
-            if (!product) return;
-
-            const cart = getCart();
-            const existingIndex = cart.findIndex(item => item.id === productId && item.size === size);
-
-            if (existingIndex > -1) {
-                cart[existingIndex].quantity += 1;
-            } else {
-                cart.push({
-                    id: productId,
-                    name: product.name,
-                    size: size,
-                    price: product.prices[size],
-                    quantity: 1
-                });
-            }
-
-            saveCart(cart);
-            showToast(`${product.name} (${size}) added to cart`);
-        }
-
-        function updateCartCount() {
-            const cart = getCart();
-            const count = cart.reduce((sum, item) => sum + item.quantity, 0);
-            document.getElementById('cartCount').textContent = count;
-        }
-
-        function showToast(message) {
-            const toast = document.getElementById('toast');
-            document.getElementById('toastMessage').textContent = message;
-            toast.classList.add('show');
-            setTimeout(() => toast.classList.remove('show'), 3000);
-        }
-
-        // Render category filters
-        function renderCategoryFilters() {
-            const container = document.getElementById('categoryFilters');
-            container.innerHTML = categories.map(cat => `
-                <label class="filter-checkbox">
-                    <input type="checkbox" value="${cat}" onchange="toggleCategory('${cat}')">
-                    <span>${cat}</span>
-                </label>
-            `).join('');
-        }
-
-        // Filter functions
-        function toggleCategory(category) {
-            const index = activeFilters.categories.indexOf(category);
-            if (index > -1) {
-                activeFilters.categories.splice(index, 1);
-            } else {
-                activeFilters.categories.push(category);
-            }
-            applyFilters();
-        }
-
-        function applyFilters() {
-            let filtered = [...products];
-
-            // Search filter
-            if (activeFilters.search) {
-                const searchLower = activeFilters.search.toLowerCase();
-                filtered = filtered.filter(p =>
-                    p.name.toLowerCase().includes(searchLower) ||
-                    p.description.toLowerCase().includes(searchLower) ||
-                    p.category.toLowerCase().includes(searchLower)
-                );
-            }
-
-            // Category filter
-            if (activeFilters.categories.length > 0) {
-                filtered = filtered.filter(p => activeFilters.categories.includes(p.category));
-            }
-
-            // Price filter (only if member can see prices)
-            if (isApprovedMember()) {
-                if (activeFilters.priceMin !== null) {
-                    filtered = filtered.filter(p => {
-                        const minPrice = Math.min(...Object.values(p.prices));
-                        return minPrice >= activeFilters.priceMin;
-                    });
-                }
-                if (activeFilters.priceMax !== null) {
-                    filtered = filtered.filter(p => {
-                        const minPrice = Math.min(...Object.values(p.prices));
-                        return minPrice <= activeFilters.priceMax;
-                    });
-                }
-            }
-
-            // Sort
-            switch (activeFilters.sort) {
-                case 'name-asc':
-                    filtered.sort((a, b) => a.name.localeCompare(b.name));
-                    break;
-                case 'name-desc':
-                    filtered.sort((a, b) => b.name.localeCompare(a.name));
-                    break;
-                case 'price-asc':
-                    filtered.sort((a, b) => Math.min(...Object.values(a.prices)) - Math.min(...Object.values(b.prices)));
-                    break;
-                case 'price-desc':
-                    filtered.sort((a, b) => Math.min(...Object.values(b.prices)) - Math.min(...Object.values(a.prices)));
-                    break;
-                default:
-                    filtered.sort((a, b) => b.popularity - a.popularity);
-            }
-
-            renderProducts(filtered);
-            renderActiveFilters();
-            document.getElementById('resultsCount').textContent = `${filtered.length} product${filtered.length !== 1 ? 's' : ''}`;
-
-            // Show/hide empty state
-            document.getElementById('emptyState').classList.toggle('hidden', filtered.length > 0);
-            document.getElementById('productsGrid').classList.toggle('hidden', filtered.length === 0);
-        }
-
-        function renderActiveFilters() {
-            const container = document.getElementById('activeFilters');
-            const tags = [];
-
-            if (activeFilters.search) {
-                tags.push(`<span class="filter-tag">Search: "${activeFilters.search}" <button onclick="clearSearch()"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></span>`);
-            }
-
-            activeFilters.categories.forEach(cat => {
-                tags.push(`<span class="filter-tag">${cat} <button onclick="removeCategory('${cat}')"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></span>`);
-            });
-
-            container.innerHTML = tags.join('');
-        }
-
-        function clearSearch() {
-            activeFilters.search = '';
-            document.getElementById('searchInput').value = '';
-            applyFilters();
-        }
-
-        function removeCategory(category) {
-            activeFilters.categories = activeFilters.categories.filter(c => c !== category);
-            const checkbox = document.querySelector(`#categoryFilters input[value="${category}"]`);
-            if (checkbox) checkbox.checked = false;
-            applyFilters();
-        }
-
-        function resetFilters() {
-            activeFilters = { search: '', categories: [], priceMin: null, priceMax: null, sort: 'popularity' };
-            document.getElementById('searchInput').value = '';
-            document.getElementById('priceMin').value = '';
-            document.getElementById('priceMax').value = '';
-            document.getElementById('sortSelect').value = 'popularity';
-            document.querySelectorAll('#categoryFilters input').forEach(cb => cb.checked = false);
-            applyFilters();
-        }
-
-        // Render products
-        function renderProducts(productList) {
-            const grid = document.getElementById('productsGrid');
-            const isMember = isApprovedMember();
-
-            grid.innerHTML = productList.map(product => {
-                const minPrice = Math.min(...Object.values(product.prices));
-                const sizes = product.sizes;
-
-                return `
-                    <div class="product-card" onclick="openModal('${product.id}')">
-                        <div class="product-image">
-                            ${product.badge ? `<span class="product-badge">${product.badge}</span>` : ''}
-                            <div class="product-placeholder">
-                                <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-                            </div>
-                        </div>
-                        <div class="product-info">
-                            <div class="product-category">${product.category}</div>
-                            <h3 class="product-name">${product.name}</h3>
-                            <div class="product-meta">
-                                <span>Purity: ${product.purity}</span>
-                                <span>${product.form}</span>
-                            </div>
-                            ${isMember
-                                ? `<div class="product-price">$${minPrice}${sizes.length > 1 ? '+' : ''}</div>`
-                                : `<div class="product-price hidden-price">Login for pricing</div>`
-                            }
-                            <div class="product-sizes">
-                                ${sizes.map(s => `<span class="size-tag">${s}</span>`).join('')}
-                            </div>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-        }
-
-        // Modal functions
-        function openModal(productId) {
-            const product = products.find(p => p.id === productId);
-            if (!product) return;
-
-            currentModalProduct = product;
-            selectedSize = product.sizes[0];
-
-            document.getElementById('modalCategory').textContent = product.category;
-            document.getElementById('modalTitle').textContent = product.name;
-            document.getElementById('modalDescription').textContent = product.description;
-
-            document.getElementById('modalSpecs').innerHTML = `
-                <div class="spec-item"><label>Purity</label><span>${product.purity}</span></div>
-                <div class="spec-item"><label>Form</label><span>${product.form}</span></div>
-                <div class="spec-item"><label>Formula</label><span>${product.specs.formula}</span></div>
-                <div class="spec-item"><label>Mol. Weight</label><span>${product.specs.weight}</span></div>
-            `;
-
-            renderModalSizes();
-
-            document.getElementById('productModal').classList.add('active');
-            document.body.style.overflow = 'hidden';
-        }
-
-        function renderModalSizes() {
-            const isMember = isApprovedMember();
-            const container = document.getElementById('modalSizes');
-
-            container.innerHTML = currentModalProduct.sizes.map(size => `
-                <div class="size-option ${size === selectedSize ? 'selected' : ''}" onclick="selectSize('${size}')">
-                    <span class="size-label">${size}</span>
-                    ${isMember
-                        ? `<span class="size-price">$${currentModalProduct.prices[size]}</span>`
-                        : `<span class="size-price hidden">Members only</span>`
-                    }
-                </div>
-            `).join('');
-        }
-
-        function selectSize(size) {
-            selectedSize = size;
-            renderModalSizes();
-        }
-
-        function closeModal() {
-            document.getElementById('productModal').classList.remove('active');
-            document.body.style.overflow = '';
-            currentModalProduct = null;
-            selectedSize = null;
-        }
-
-        function addModalToCart() {
-            if (!currentModalProduct || !selectedSize) return;
-            addToCart(currentModalProduct.id, selectedSize);
-            closeModal();
-        }
-
-        // Event listeners
-        document.getElementById('searchInput').addEventListener('input', (e) => {
-            activeFilters.search = e.target.value;
-            applyFilters();
-        });
-
-        document.getElementById('sortSelect').addEventListener('change', (e) => {
-            activeFilters.sort = e.target.value;
-            applyFilters();
-        });
-
-        document.getElementById('priceMin').addEventListener('input', (e) => {
-            activeFilters.priceMin = e.target.value ? Number(e.target.value) : null;
-            applyFilters();
-        });
-
-        document.getElementById('priceMax').addEventListener('input', (e) => {
-            activeFilters.priceMax = e.target.value ? Number(e.target.value) : null;
-            applyFilters();
-        });
-
-        document.getElementById('productModal').addEventListener('click', (e) => {
-            if (e.target.classList.contains('modal-overlay')) {
-                closeModal();
-            }
-        });
-
-        // URL params for category
-        document.addEventListener('DOMContentLoaded', () => {
-            renderCategoryFilters();
-            updateCartCount();
-
-            const urlParams = new URLSearchParams(window.location.search);
-            const categoryParam = urlParams.get('category');
-            if (categoryParam) {
-                activeFilters.categories = [categoryParam];
-                const checkbox = document.querySelector(`#categoryFilters input[value="${categoryParam}"]`);
-                if (checkbox) checkbox.checked = true;
-            }
-
-            applyFilters();
-        });
-
-        // Escape key to close modal
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') closeModal();
-        });
+const products=[{id:'5-amino-1mq',name:'5-Amino-1MQ',category:'Metabolic Research',description:'A small molecule NNMT inhibitor that may influence cellular NAD+ levels and energy metabolism.',sizes:['50mg'],prices:{'50mg':100},purity:'99%+',form:'Lyophilized Powder',specs:{formula:'C11H13N3O',weight:'203.24 g/mol'},popularity:6},{id:'aod-9604',name:'AOD-9604',category:'Metabolic Research',description:'A modified HGH fragment (176-191) studied for lipolysis and fat metabolism.',sizes:['10mg'],prices:{'10mg':80},purity:'99%+',form:'Lyophilized Powder',specs:{formula:'C78H125N23O23S2',weight:'1817.1 g/mol'},popularity:6},{id:'bpc-157',name:'BPC-157',category:'Tissue Repair',description:'Body Protection Compound-157, a pentadecapeptide extensively researched for tissue repair and cytoprotective properties.',sizes:['10mg'],prices:{'10mg':40},purity:'99%+',form:'Lyophilized Powder',specs:{formula:'C62H98N16O22',weight:'1419.5 g/mol'},badge:'Best Seller',popularity:10},{id:'bpc-tb-wolverine',name:'BPC-157 + TB-500 Wolverine',category:'Tissue Repair',description:'A synergistic blend of two tissue repair peptides for wound healing research.',sizes:['10mg','20mg'],prices:{'10mg':60,'20mg':110},purity:'99%+',form:'Lyophilized Powder',specs:{formula:'Blend',weight:'Varies'},badge:'Bundle',popularity:9},{id:'bronchogen',name:'Bronchogen',category:'Bioregulator Peptides',description:'A bioregulator tetrapeptide researched for respiratory tissue effects.',sizes:['20mg'],prices:{'20mg':80},purity:'99%+',form:'Lyophilized Powder',specs:{formula:'C18H30N4O9',weight:'446.45 g/mol'},popularity:4},{id:'cagrilintide',name:'Cagrilintide',category:'Metabolic Research',description:'A long-acting amylin analog studied for gastric emptying and satiety signaling.',sizes:['10mg'],prices:{'10mg':80},purity:'99%+',form:'Lyophilized Powder',specs:{formula:'C176H276N50O53S2',weight:'3990.8 g/mol'},popularity:7},{id:'cardiogen',name:'Cardiogen',category:'Bioregulator Peptides',description:'A tetrapeptide bioregulator studied for cardiac tissue effects.',sizes:['20mg'],prices:{'20mg':80},purity:'99%+',form:'Lyophilized Powder',specs:{formula:'C18H32N6O8',weight:'460.48 g/mol'},popularity:4},{id:'cjc-1295-no-dac',name:'CJC-1295 No DAC',category:'GH Secretagogues',description:'Modified GRF 1-29 with enhanced stability for pulsatile GH release research.',sizes:['10mg'],prices:{'10mg':50},purity:'99%+',form:'Lyophilized Powder',specs:{formula:'C152H252N44O42',weight:'3367.9 g/mol'},popularity:8},{id:'ghk-cu',name:'GHK-Cu',category:'Longevity Research',description:'A copper-binding tripeptide researched for wound healing and anti-aging mechanisms.',sizes:['100mg'],prices:{'100mg':60},purity:'99%+',form:'Lyophilized Powder',specs:{formula:'C14H24CuN6O4',weight:'403.9 g/mol'},popularity:7},{id:'glp-2t',name:'GLP-2T',category:'Metabolic Research',description:'A dual GIP/GLP-1 receptor agonist for metabolic research.',sizes:['10mg','20mg'],prices:{'10mg':60,'20mg':100},purity:'99%+',form:'Lyophilized Powder',specs:{formula:'C225H348N48O68',weight:'4813.5 g/mol'},badge:'Popular',popularity:10},{id:'glp-3r',name:'GLP-3R',category:'Metabolic Research',description:'A triple agonist targeting GIP, GLP-1, and glucagon receptors.',sizes:['10mg','20mg','30mg'],prices:{'10mg':60,'20mg':100,'30mg':140},purity:'99%+',form:'Lyophilized Powder',specs:{formula:'C237H366N66O72S',weight:'5414.0 g/mol'},badge:'New',popularity:9},{id:'glutathione',name:'Glutathione',category:'Longevity Research',description:'The master antioxidant tripeptide for detoxification and oxidative stress research.',sizes:['1500mg'],prices:{'1500mg':65},purity:'99%+',form:'Lyophilized Powder',specs:{formula:'C10H17N3O6S',weight:'307.32 g/mol'},popularity:7},{id:'hcg',name:'HCG',category:'GH Secretagogues',description:'Human Chorionic Gonadotropin for reproductive and endocrine research.',sizes:['5000iu'],prices:{'5000iu':45},purity:'99%+',form:'Lyophilized Powder',specs:{formula:'Glycoprotein',weight:'36.7 kDa'},popularity:6},{id:'hgh-191aa',name:'HGH-191aa',category:'GH Secretagogues',description:'Recombinant human growth hormone identical to endogenous GH.',sizes:['15iu'],prices:{'15iu':45},purity:'99%+',form:'Lyophilized Powder',specs:{formula:'C990H1529N263O299S7',weight:'22124 g/mol'},popularity:7},{id:'ipamorelin',name:'Ipamorelin',category:'GH Secretagogues',description:'A selective GH secretagogue without effects on cortisol or prolactin.',sizes:['10mg'],prices:{'10mg':40},purity:'99%+',form:'Lyophilized Powder',specs:{formula:'C38H49N9O5',weight:'711.9 g/mol'},popularity:8},{id:'kisspeptin',name:'Kisspeptin',category:'Research Peptides',description:'A neuropeptide critical for reproductive hormone regulation.',sizes:['10mg'],prices:{'10mg':50},purity:'99%+',form:'Lyophilized Powder',specs:{formula:'C63H83N17O14',weight:'1302.45 g/mol'},popularity:5},{id:'klow',name:'KLOW',category:'Longevity Research',description:'A research peptide for metabolic and longevity pathway studies.',sizes:['80mg'],prices:{'80mg':100},purity:'99%+',form:'Lyophilized Powder',specs:{formula:'Research Compound',weight:'Varies'},popularity:4},{id:'kpv',name:'KPV',category:'Tissue Repair',description:'A tripeptide with anti-inflammatory properties via NF-κB modulation.',sizes:['10mg'],prices:{'10mg':40},purity:'99%+',form:'Lyophilized Powder',specs:{formula:'C16H30N4O4',weight:'342.43 g/mol'},popularity:6},{id:'mots-c',name:'MOTS-c',category:'Longevity Research',description:'A mitochondrial-derived peptide for metabolic homeostasis research.',sizes:['10mg','40mg'],prices:{'10mg':40,'40mg':100},purity:'99%+',form:'Lyophilized Powder',specs:{formula:'C101H152N28O22S2',weight:'2174.64 g/mol'},popularity:6},{id:'mt1',name:'MT-1 (Melanotan I)',category:'Research Peptides',description:'An α-MSH analog for melanogenesis and photoprotection research.',sizes:['10mg'],prices:{'10mg':30},purity:'99%+',form:'Lyophilized Powder',specs:{formula:'C78H111N21O19',weight:'1646.85 g/mol'},popularity:5},{id:'nad-plus',name:'NAD+',category:'Longevity Research',description:'Nicotinamide Adenine Dinucleotide for mitochondrial and sirtuin research.',sizes:['1000mg'],prices:{'1000mg':30},purity:'99%+',form:'Lyophilized Powder',specs:{formula:'C21H27N7O14P2',weight:'663.43 g/mol'},popularity:8},{id:'oxytocin',name:'Oxytocin Acetate',category:'Research Peptides',description:'A neuropeptide for social bonding and stress regulation research.',sizes:['10mg'],prices:{'10mg':70},purity:'99%+',form:'Lyophilized Powder',specs:{formula:'C43H66N12O12S2',weight:'1007.19 g/mol'},popularity:5},{id:'prostamax',name:'Prostamax',category:'Bioregulator Peptides',description:'A bioregulator peptide for prostate tissue research.',sizes:['20mg'],prices:{'20mg':80},purity:'99%+',form:'Lyophilized Powder',specs:{formula:'Peptide Complex',weight:'Varies'},popularity:4},{id:'selank',name:'Selank',category:'Nootropic Research',description:'A tuftsin analog with anxiolytic and nootropic properties.',sizes:['10mg'],prices:{'10mg':40},purity:'99%+',form:'Lyophilized Powder',specs:{formula:'C33H57N11O9',weight:'751.9 g/mol'},popularity:6},{id:'semax',name:'Semax',category:'Nootropic Research',description:'An ACTH analog for neuroprotective and BDNF research.',sizes:['10mg'],prices:{'10mg':40},purity:'99%+',form:'Lyophilized Powder',specs:{formula:'C37H51N9O10S',weight:'813.9 g/mol'},popularity:7},{id:'sermorelin',name:'Sermorelin',category:'GH Secretagogues',description:'A GHRH analog for physiological GH release research.',sizes:['10mg'],prices:{'10mg':50},purity:'99%+',form:'Lyophilized Powder',specs:{formula:'C149H246N44O42S',weight:'3357.9 g/mol'},popularity:7},{id:'slu-pp-322',name:'SLU-PP-322',category:'GH Secretagogues',description:'A novel GH secretagogue with unique ghrelin receptor binding.',sizes:['5mg'],prices:{'5mg':40},purity:'99%+',form:'Lyophilized Powder',specs:{formula:'Research Compound',weight:'Varies'},popularity:4},{id:'ss31',name:'SS31 (Elamipretide)',category:'Longevity Research',description:'A mitochondria-targeting peptide for ATP production research.',sizes:['10mg'],prices:{'10mg':45},purity:'99%+',form:'Lyophilized Powder',specs:{formula:'C32H49N9O5',weight:'639.78 g/mol'},popularity:6},{id:'tb-500',name:'TB-500',category:'Tissue Repair',description:'Thymosin Beta-4 for cell migration and tissue regeneration research.',sizes:['10mg'],prices:{'10mg':40},purity:'99%+',form:'Lyophilized Powder',specs:{formula:'C212H350N56O78S',weight:'4963.4 g/mol'},popularity:9},{id:'tesamorelin',name:'Tesamorelin',category:'GH Secretagogues',description:'A stabilized GHRH analog with enhanced GH-releasing properties.',sizes:['10mg','15mg'],prices:{'10mg':60,'15mg':85},purity:'99%+',form:'Lyophilized Powder',specs:{formula:'C221H366N72O67S',weight:'5135.9 g/mol'},popularity:7},{id:'testagen',name:'Testagen',category:'Longevity Research',description:'A bioregulator for testicular function research.',sizes:['20mg'],prices:{'20mg':90},purity:'99%+',form:'Lyophilized Powder',specs:{formula:'Tetrapeptide',weight:'Varies'},popularity:5},{id:'thymosin-alpha-1',name:'Thymosin Alpha-1 (TA1)',category:'Research Peptides',description:'A thymic peptide for T-cell and immunomodulation research.',sizes:['10mg'],prices:{'10mg':60},purity:'99%+',form:'Lyophilized Powder',specs:{formula:'C129H215N33O55',weight:'3108.29 g/mol'},popularity:6},{id:'vip',name:'VIP',category:'Tissue Repair',description:'Vasoactive Intestinal Peptide for vasodilatory and immunomodulatory research.',sizes:['10mg'],prices:{'10mg':70},purity:'99%+',form:'Lyophilized Powder',specs:{formula:'C147H237N43O44S',weight:'3326.8 g/mol'},popularity:5}];
+const categories=[...new Set(products.map(p=>p.category))].sort();
+let activeFilters={search:'',categories:[],priceMin:null,priceMax:null,sort:'name-asc'};
+let currentModalProduct=null;
+function isApprovedMember(){const u=JSON.parse(localStorage.getItem('peptideUser')||'{}');return u.approved===true;}
+function getCart(){return JSON.parse(localStorage.getItem('peptideCart')||'[]');}
+function saveCart(c){localStorage.setItem('peptideCart',JSON.stringify(c));updateCartCount();}
+function addToCart(id,size){const p=products.find(x=>x.id===id);if(!p)return;const c=getCart();const i=c.findIndex(x=>x.id===id&&x.size===size);if(i>-1)c[i].quantity+=1;else c.push({id,name:p.name,size,price:p.prices[size],quantity:1});saveCart(c);showToast(`${p.name} (${size}) added to cart`);}
+function updateCartCount(){document.getElementById('cartCount').textContent=getCart().reduce((s,i)=>s+i.quantity,0);}
+function showToast(m){const t=document.getElementById('toast');document.getElementById('toastMessage').textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3000);}
+function renderCategoryFilters(){document.getElementById('categoryFilters').innerHTML=categories.map(c=>`<label class="filter-checkbox"><input type="checkbox" value="${c}" onchange="toggleCategory('${c}')"><span>${c}</span></label>`).join('');}
+function toggleCategory(c){const i=activeFilters.categories.indexOf(c);if(i>-1)activeFilters.categories.splice(i,1);else activeFilters.categories.push(c);applyFilters();}
+function applyFilters(){let f=[...products];if(activeFilters.search){const s=activeFilters.search.toLowerCase();f=f.filter(p=>p.name.toLowerCase().includes(s)||p.description.toLowerCase().includes(s)||p.category.toLowerCase().includes(s));}if(activeFilters.categories.length)f=f.filter(p=>activeFilters.categories.includes(p.category));if(isApprovedMember()){if(activeFilters.priceMin!==null)f=f.filter(p=>Math.min(...Object.values(p.prices))>=activeFilters.priceMin);if(activeFilters.priceMax!==null)f=f.filter(p=>Math.min(...Object.values(p.prices))<=activeFilters.priceMax);}switch(activeFilters.sort){case'name-asc':f.sort((a,b)=>a.name.localeCompare(b.name));break;case'name-desc':f.sort((a,b)=>b.name.localeCompare(a.name));break;case'price-asc':f.sort((a,b)=>Math.min(...Object.values(a.prices))-Math.min(...Object.values(b.prices)));break;case'price-desc':f.sort((a,b)=>Math.min(...Object.values(b.prices))-Math.min(...Object.values(a.prices)));break;}renderProducts(f);renderActiveFilters();document.getElementById('resultsCount').textContent=`${f.length} product${f.length!==1?'s':''}`;document.getElementById('emptyState').classList.toggle('hidden',f.length>0);document.getElementById('productsGrid').classList.toggle('hidden',f.length===0);}
+function renderActiveFilters(){const t=[];if(activeFilters.search)t.push(`<span class="filter-tag">Search: "${activeFilters.search}" <button onclick="clearSearch()"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></span>`);activeFilters.categories.forEach(c=>t.push(`<span class="filter-tag">${c} <button onclick="removeCategory('${c}')"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></span>`));document.getElementById('activeFilters').innerHTML=t.join('');}
+function clearSearch(){activeFilters.search='';document.getElementById('searchInput').value='';document.getElementById('headerSearchInput').value='';applyFilters();}
+function removeCategory(c){activeFilters.categories=activeFilters.categories.filter(x=>x!==c);const cb=document.querySelector(`#categoryFilters input[value="${c}"]`);if(cb)cb.checked=false;applyFilters();}
+function resetFilters(){activeFilters={search:'',categories:[],priceMin:null,priceMax:null,sort:'name-asc'};document.getElementById('searchInput').value='';document.getElementById('headerSearchInput').value='';document.getElementById('priceMin').value='';document.getElementById('priceMax').value='';document.getElementById('sortSelect').value='name-asc';document.querySelectorAll('#categoryFilters input').forEach(cb=>cb.checked=false);applyFilters();}
+function renderProducts(list){const g=document.getElementById('productsGrid');const m=isApprovedMember();g.innerHTML=list.map(p=>{const min=Math.min(...Object.values(p.prices));return`<div class="product-card" onclick="openModal('${p.id}')"><div class="product-image">${p.badge?`<span class="product-badge">${p.badge}</span>`:''}<div class="product-placeholder"><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div></div><div class="product-info"><div class="product-category">${p.category}</div><h3 class="product-name">${p.name}</h3><div class="product-meta"><span>Purity: ${p.purity}</span><span>${p.form}</span></div>${m?`<div class="product-price">$${min}${p.sizes.length>1?'+':''}</div>`:`<div class="product-price hidden-price">Login for pricing</div>`}<div class="product-sizes">${p.sizes.map(s=>`<span class="size-tag">${s}</span>`).join('')}</div></div></div>`;}).join('');}
+function openModal(id){const p=products.find(x=>x.id===id);if(!p)return;currentModalProduct=p;document.getElementById('modalCategory').textContent=p.category;document.getElementById('modalTitle').textContent=p.name;document.getElementById('modalDescription').textContent=p.description;document.getElementById('modalSpecs').innerHTML=`<div class="spec-item"><label>Purity</label><span>${p.purity}</span></div><div class="spec-item"><label>Form</label><span>${p.form}</span></div><div class="spec-item"><label>Formula</label><span>${p.specs.formula}</span></div><div class="spec-item"><label>Mol. Weight</label><span>${p.specs.weight}</span></div>`;const m=isApprovedMember();const sel=document.getElementById('modalSizeSelect');sel.innerHTML='<option value="">-- Choose a size --</option>'+p.sizes.map(s=>`<option value="${s}">${s}${m?` - $${p.prices[s]}`:''}</option>`).join('');sel.classList.remove('error');document.getElementById('sizeError').classList.remove('show');document.getElementById('productModal').classList.add('active');document.body.style.overflow='hidden';}
+function closeModal(){document.getElementById('productModal').classList.remove('active');document.body.style.overflow='';currentModalProduct=null;}
+function addModalToCart(){if(!currentModalProduct)return;const sel=document.getElementById('modalSizeSelect');if(!sel.value){sel.classList.add('error');document.getElementById('sizeError').classList.add('show');return;}addToCart(currentModalProduct.id,sel.value);closeModal();}
+document.getElementById('searchInput').addEventListener('input',e=>{activeFilters.search=e.target.value;document.getElementById('headerSearchInput').value=e.target.value;applyFilters();});
+document.getElementById('headerSearchInput').addEventListener('input',e=>{activeFilters.search=e.target.value;document.getElementById('searchInput').value=e.target.value;applyFilters();});
+document.getElementById('sortSelect').addEventListener('change',e=>{activeFilters.sort=e.target.value;applyFilters();});
+document.getElementById('priceMin').addEventListener('input',e=>{activeFilters.priceMin=e.target.value?Number(e.target.value):null;applyFilters();});
+document.getElementById('priceMax').addEventListener('input',e=>{activeFilters.priceMax=e.target.value?Number(e.target.value):null;applyFilters();});
+document.getElementById('productModal').addEventListener('click',e=>{if(e.target.classList.contains('modal-overlay'))closeModal();});
+document.getElementById('modalSizeSelect').addEventListener('change',()=>{document.getElementById('modalSizeSelect').classList.remove('error');document.getElementById('sizeError').classList.remove('show');});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal();});
+document.addEventListener('DOMContentLoaded',()=>{renderCategoryFilters();updateCartCount();const cat=new URLSearchParams(window.location.search).get('category');if(cat){activeFilters.categories=[cat];const cb=document.querySelector(`#categoryFilters input[value="${cat}"]`);if(cb)cb.checked=true;}applyFilters();});
     </script>
 </body>
 </html>
