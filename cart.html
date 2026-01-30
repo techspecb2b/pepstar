@@ -76,11 +76,9 @@
         }
 
         .logo-img {
-            height: 40px;
+            height: 60px;
             width: auto;
         }
-
-        .logo-img { height: 36px; width: auto; border-radius: 8px; }
 
         nav { display: flex; align-items: center; gap: 32px; }
         nav a { font-weight: 500; color: var(--text-secondary); transition: color 0.2s; font-size: 0.95rem; }
@@ -415,6 +413,75 @@
             margin-top: 4px;
         }
 
+        /* Shipping Options */
+        .shipping-options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .shipping-option {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 16px;
+            border: 2px solid var(--border);
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .shipping-option:hover {
+            border-color: var(--primary);
+            background: rgba(11, 75, 142, 0.02);
+        }
+
+        .shipping-option input[type="radio"] {
+            margin-top: 4px;
+            width: 18px;
+            height: 18px;
+            accent-color: var(--primary);
+        }
+
+        .shipping-option input[type="radio"]:checked + .shipping-option-content {
+            color: var(--text-primary);
+        }
+
+        .shipping-option:has(input:checked) {
+            border-color: var(--primary);
+            background: rgba(11, 75, 142, 0.05);
+        }
+
+        .shipping-option-content {
+            flex: 1;
+        }
+
+        .shipping-option-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 4px;
+        }
+
+        .shipping-option-header strong {
+            font-weight: 600;
+        }
+
+        .shipping-price {
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .shipping-option-content p {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin: 0;
+        }
+
+        .shipping-option-content em {
+            color: var(--accent);
+        }
+
         /* Empty Cart */
         .empty-cart {
             text-align: center;
@@ -668,6 +735,32 @@
                     </div>
 
                     <div class="form-section">
+                        <h3>Shipping Method</h3>
+                        <div class="shipping-options">
+                            <label class="shipping-option">
+                                <input type="radio" name="shippingMethod" value="delivery" checked onchange="toggleShippingMethod()">
+                                <div class="shipping-option-content">
+                                    <div class="shipping-option-header">
+                                        <strong>Standard Delivery</strong>
+                                        <span class="shipping-price" id="deliveryPrice">$15.00</span>
+                                    </div>
+                                    <p>2-5 business days • Free on orders over $200</p>
+                                </div>
+                            </label>
+                            <label class="shipping-option">
+                                <input type="radio" name="shippingMethod" value="pickup" onchange="toggleShippingMethod()">
+                                <div class="shipping-option-content">
+                                    <div class="shipping-option-header">
+                                        <strong>Local Pickup</strong>
+                                        <span class="shipping-price">FREE</span>
+                                    </div>
+                                    <p>1785 Garth Brooks Blvd, Yukon, OK 73099<br><em>Inside Jumptronics Phone Rescue</em></p>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="form-section" id="shippingAddressSection">
                         <h3>Shipping Address</h3>
                         <div class="form-row full">
                             <div class="form-group">
@@ -826,11 +919,50 @@
             setTimeout(() => toast.classList.remove('show'), 3000);
         }
 
+        // Toggle shipping method
+        function toggleShippingMethod() {
+            const isPickup = document.querySelector('input[name="shippingMethod"]:checked')?.value === 'pickup';
+            const addressSection = document.getElementById('shippingAddressSection');
+            const addressInputs = addressSection.querySelectorAll('input');
+            
+            if (isPickup) {
+                addressSection.style.display = 'none';
+                addressInputs.forEach(input => {
+                    if (input.id !== 'country') {
+                        input.removeAttribute('required');
+                    }
+                });
+            } else {
+                addressSection.style.display = 'block';
+                ['address', 'city', 'state', 'zip'].forEach(id => {
+                    document.getElementById(id)?.setAttribute('required', '');
+                });
+            }
+            
+            // Update totals display
+            updateTotalsDisplay();
+        }
+
+        // Update totals display
+        function updateTotalsDisplay() {
+            const { subtotal, shipping, total } = calculateTotals();
+            document.getElementById('subtotal').textContent = `$${subtotal.toFixed(2)}`;
+            document.getElementById('shipping').textContent = shipping === 0 ? 'FREE' : `$${shipping.toFixed(2)}`;
+            document.getElementById('total').textContent = `$${total.toFixed(2)}`;
+            
+            // Update delivery price display in shipping options
+            const deliveryPriceEl = document.getElementById('deliveryPrice');
+            if (deliveryPriceEl) {
+                deliveryPriceEl.textContent = subtotal >= 200 ? 'FREE' : '$15.00';
+            }
+        }
+
         // Calculate totals
         function calculateTotals() {
             const cart = getCart();
             const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-            const shipping = subtotal >= 200 ? 0 : 15;
+            const isPickup = document.querySelector('input[name="shippingMethod"]:checked')?.value === 'pickup';
+            const shipping = isPickup ? 0 : (subtotal >= 200 ? 0 : 15);
             const total = subtotal + shipping;
 
             return { subtotal, shipping, total };
@@ -897,6 +1029,8 @@
             const formData = new FormData(form);
             const cart = getCart();
             const { subtotal, shipping, total } = calculateTotals();
+            const shippingMethod = document.querySelector('input[name="shippingMethod"]:checked')?.value || 'delivery';
+            const isPickup = shippingMethod === 'pickup';
 
             // Build customer info
             const customer = {
@@ -917,11 +1051,20 @@
             const orderNumber = 'PL-' + Date.now().toString().slice(-6);
 
             // Build Trello card content
-            const cardName = `Order - ${customer.firstName} ${customer.lastName} - $${total.toFixed(2)}`;
+            const cardName = `Order - ${customer.firstName} ${customer.lastName} - $${total.toFixed(2)}${isPickup ? ' [PICKUP]' : ''}`;
             
             const itemsList = cart.map(item => 
                 `• ${item.name} (${item.size}) x${item.quantity} - $${(item.price * item.quantity).toFixed(2)}`
             ).join('\n');
+
+            const shippingInfo = isPickup 
+                ? `**LOCAL PICKUP**
+Location: 1785 Garth Brooks Blvd, Yukon, OK 73099
+Inside Jumptronics Phone Rescue`
+                : `**SHIPPING ADDRESS**
+${customer.address}
+${customer.address2 ? customer.address2 + '\n' : ''}${customer.city}, ${customer.state} ${customer.zip}
+${customer.country}`;
 
             const cardDescription = `
 **Order Reference:** ${orderNumber}
@@ -936,10 +1079,7 @@ Phone: ${customer.phone}
 
 ---
 
-**SHIPPING ADDRESS**
-${customer.address}
-${customer.address2 ? customer.address2 + '\n' : ''}${customer.city}, ${customer.state} ${customer.zip}
-${customer.country}
+${shippingInfo}
 
 ---
 
@@ -950,7 +1090,7 @@ ${itemsList}
 
 **ORDER TOTALS**
 Subtotal: $${subtotal.toFixed(2)}
-Shipping: ${shipping === 0 ? 'FREE' : '$' + shipping.toFixed(2)}
+Shipping: ${isPickup ? 'LOCAL PICKUP (FREE)' : (shipping === 0 ? 'FREE' : '$' + shipping.toFixed(2))}
 **TOTAL: $${total.toFixed(2)}**
 
 ---
@@ -988,6 +1128,7 @@ ${customer.notes ? '**NOTES:**\n' + customer.notes : ''}
                     items: cart,
                     subtotal,
                     shipping,
+                    shippingMethod: isPickup ? 'pickup' : 'delivery',
                     total,
                     date: new Date().toISOString(),
                     status: 'pending'
