@@ -481,7 +481,7 @@
         const cart = JSON.parse(localStorage.getItem('peptideCart') || '[]');
         document.getElementById('cartItems').textContent = cart.reduce((sum, item) => sum + item.quantity, 0);
 
-        // Trello Configuration for status sync
+        // Trello Configuration - orders are stored in Trello
         const TRELLO_CONFIG = {
             apiKey: '3ea0ef2b85773186d7ae30322ae1782d',
             token: 'ATTAde902321af1ec6600e16a0587516fb0b68cff7d5ce58997aa165fc08ba35568217827FB6',
@@ -491,101 +491,144 @@
         // Map Trello list names to order statuses
         const LIST_STATUS_MAP = {
             'incoming orders': 'pending',
+            'incoming': 'pending',
             'processing': 'processing',
             'shipped': 'shipped',
             'completed': 'completed'
         };
 
-        // Fetch order statuses from Trello
-        async function fetchTrelloStatuses() {
+        // Parse order details from Trello card
+        function parseOrderFromCard(card, listStatusMap) {
+            const desc = card.desc || '';
+            
+            // Extract order number from card name (format: "PL-XXXXXX - Name - $XX.XX")
+            const orderMatch = card.name.match(/PL-\d+/);
+            const orderNumber = orderMatch ? orderMatch[0] : 'N/A';
+            
+            // Extract email from description
+            const emailMatch = desc.match(/Email:\s*([^\s\n]+)/i);
+            const email = emailMatch ? emailMatch[1].trim() : null;
+            
+            // Extract total from description
+            const totalMatch = desc.match(/\*\*TOTAL:\s*\$?([\d.]+)\*\*/i) || card.name.match(/\$(\d+\.?\d*)/);
+            const total = totalMatch ? parseFloat(totalMatch[1]) : 0;
+            
+            // Extract date from description or use card creation date
+            const dateMatch = desc.match(/\*\*Date:\*\*\s*([^\n]+)/i);
+            let orderDate;
+            if (dateMatch) {
+                orderDate = new Date(dateMatch[1].trim());
+            } else {
+                // Trello card IDs contain timestamp - first 8 chars are hex timestamp
+                const timestamp = parseInt(card.id.substring(0, 8), 16) * 1000;
+                orderDate = new Date(timestamp);
+            }
+            
+            // Count items from description
+            const itemMatches = desc.match(/•\s*[^\n]+/g) || [];
+            let itemCount = 0;
+            itemMatches.forEach(item => {
+                const qtyMatch = item.match(/x(\d+)/);
+                itemCount += qtyMatch ? parseInt(qtyMatch[1]) : 1;
+            });
+            
+            // Get status from list
+            const status = listStatusMap[card.idList] || 'pending';
+            
+            return {
+                orderNumber,
+                email,
+                total,
+                date: orderDate,
+                itemCount,
+                status
+            };
+        }
+
+        // Load orders from Trello for the logged-in user
+        async function loadOrders() {
+            const ordersEmpty = document.getElementById('ordersEmpty');
+            const ordersTable = document.getElementById('ordersTable');
+            const ordersBody = document.getElementById('ordersBody');
+            const userEmail = user.email ? user.email.toLowerCase() : '';
+            
+            // Show loading state
+            ordersEmpty.style.display = 'none';
+            ordersTable.style.display = 'table';
+            ordersBody.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 20px;">Loading orders...</td></tr>';
+            
             try {
-                // Get all lists on the board
+                // Fetch lists to map IDs to statuses
                 const listsRes = await fetch(
                     `https://api.trello.com/1/boards/${TRELLO_CONFIG.boardId}/lists?key=${TRELLO_CONFIG.apiKey}&token=${TRELLO_CONFIG.token}`
                 );
                 const lists = await listsRes.json();
                 
-                // Create map of list ID to status
                 const listStatusMap = {};
                 lists.forEach(list => {
                     const listName = list.name.toLowerCase();
                     for (const [key, status] of Object.entries(LIST_STATUS_MAP)) {
-                        if (listName.includes(key) || key.includes(listName)) {
+                        if (listName.includes(key)) {
                             listStatusMap[list.id] = status;
                             break;
                         }
                     }
+                    // Default to pending if no match
+                    if (!listStatusMap[list.id]) {
+                        listStatusMap[list.id] = 'pending';
+                    }
                 });
 
-                // Get all cards on the board
+                // Fetch all cards from the board
                 const cardsRes = await fetch(
                     `https://api.trello.com/1/boards/${TRELLO_CONFIG.boardId}/cards?key=${TRELLO_CONFIG.apiKey}&token=${TRELLO_CONFIG.token}`
                 );
                 const cards = await cardsRes.json();
-
-                // Create map of order number to status
-                const orderStatuses = {};
+                
+                // Parse cards and filter by user email
+                const userOrders = [];
                 cards.forEach(card => {
-                    // Extract order number from card name (format: "Order: Name - PL-XXXXXX")
-                    const match = card.name.match(/PL-\d+/);
-                    if (match) {
-                        const orderNumber = match[0];
-                        orderStatuses[orderNumber] = listStatusMap[card.idList] || 'pending';
+                    const order = parseOrderFromCard(card, listStatusMap);
+                    if (order.email && order.email.toLowerCase() === userEmail) {
+                        userOrders.push(order);
                     }
                 });
-
-                return orderStatuses;
+                
+                if (userOrders.length === 0) {
+                    ordersEmpty.style.display = 'block';
+                    ordersTable.style.display = 'none';
+                    return;
+                }
+                
+                // Sort by date (newest first)
+                userOrders.sort((a, b) => new Date(b.date) - new Date(a.date));
+                
+                // Update stats
+                document.getElementById('totalOrders').textContent = userOrders.length;
+                document.getElementById('pendingOrders').textContent = userOrders.filter(o => o.status === 'pending').length;
+                
+                // Render orders
+                ordersBody.innerHTML = userOrders.map(order => {
+                    const statusClass = order.status === 'pending' ? 'pending' : 
+                                       order.status === 'processing' ? 'processing' : 
+                                       order.status === 'shipped' ? 'shipped' : 
+                                       order.status === 'completed' ? 'shipped' : 'pending';
+                    const statusDisplay = order.status.charAt(0).toUpperCase() + order.status.slice(1);
+                    return `
+                        <tr>
+                            <td><strong>${order.orderNumber}</strong></td>
+                            <td>${order.date.toLocaleDateString()}</td>
+                            <td>${order.itemCount} item${order.itemCount !== 1 ? 's' : ''}</td>
+                            <td>$${order.total.toFixed(2)}</td>
+                            <td><span class="status-badge ${statusClass}">${statusDisplay}</span></td>
+                        </tr>
+                    `;
+                }).join('');
+                
             } catch (error) {
-                console.error('Error fetching Trello statuses:', error);
-                return {};
+                console.error('Error loading orders from Trello:', error);
+                ordersBody.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 20px; color: var(--error);">Unable to load orders. Please try again later.</td></tr>';
             }
-        }
-
-        // Load and display orders with Trello status sync
-        async function loadOrders() {
-            const orders = JSON.parse(localStorage.getItem('peptideOrders') || '[]');
-            const ordersEmpty = document.getElementById('ordersEmpty');
-            const ordersTable = document.getElementById('ordersTable');
-            const ordersBody = document.getElementById('ordersBody');
-            
-            if (orders.length === 0) {
-                ordersEmpty.style.display = 'block';
-                ordersTable.style.display = 'none';
-                return;
-            }
-            
-            ordersEmpty.style.display = 'none';
-            ordersTable.style.display = 'table';
-            
-            // Show loading state
-            ordersBody.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 20px;">Loading order status...</td></tr>';
-            
-            // Fetch current statuses from Trello
-            const trelloStatuses = await fetchTrelloStatuses();
-            
-            // Sort orders by date (newest first)
-            orders.sort((a, b) => new Date(b.date) - new Date(a.date));
-            
-            ordersBody.innerHTML = orders.map(order => {
-                const itemCount = order.items ? order.items.reduce((sum, item) => sum + item.quantity, 0) : 0;
-                const orderNum = order.orderNumber || order.id || '';
-                // Use Trello status if available, otherwise fall back to local status
-                const status = (trelloStatuses[orderNum] || order.status || 'pending').toLowerCase();
-                const statusClass = status === 'pending' ? 'pending' : 
-                                   status === 'processing' ? 'processing' : 
-                                   status === 'shipped' ? 'shipped' : 
-                                   status === 'completed' ? 'shipped' : 'pending';
-                const statusDisplay = status.charAt(0).toUpperCase() + status.slice(1);
-                return `
-                    <tr>
-                        <td><strong>${orderNum || 'N/A'}</strong></td>
-                        <td>${order.date ? new Date(order.date).toLocaleDateString() : 'N/A'}</td>
-                        <td>${itemCount} item${itemCount !== 1 ? 's' : ''}</td>
-                        <td>$${order.total ? order.total.toFixed(2) : '0.00'}</td>
-                        <td><span class="status-badge ${statusClass}">${statusDisplay}</span></td>
-                    </tr>
-                `;
-            }).join('');
         }
         
         loadOrders();
