@@ -1145,6 +1145,21 @@ ${customer.notes ? '**NOTES:**\n' + customer.notes : ''}
         document.addEventListener('DOMContentLoaded', () => {
             renderCart();
             updateCartCount();
+            
+            // Pre-fill checkout form with logged-in user info
+            const user = JSON.parse(localStorage.getItem('peptideUser') || '{}');
+            if (user.email) {
+                const emailField = document.getElementById('email');
+                if (emailField) emailField.value = user.email;
+            }
+            if (user.firstName) {
+                const firstNameField = document.getElementById('firstName');
+                if (firstNameField) firstNameField.value = user.firstName;
+            }
+            if (user.lastName) {
+                const lastNameField = document.getElementById('lastName');
+                if (lastNameField) lastNameField.value = user.lastName;
+            }
         });
     </script>
 </body>
