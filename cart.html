@@ -1120,20 +1120,8 @@ ${customer.notes ? '**NOTES:**\n' + customer.notes : ''}
                     await new Promise(resolve => setTimeout(resolve, 1500));
                 }
 
-                // Store order locally
-                const orders = JSON.parse(localStorage.getItem('peptideOrders') || '[]');
-                orders.push({
-                    orderNumber,
-                    customer,
-                    items: cart,
-                    subtotal,
-                    shipping,
-                    shippingMethod: isPickup ? 'pickup' : 'delivery',
-                    total,
-                    date: new Date().toISOString(),
-                    status: 'pending'
-                });
-                localStorage.setItem('peptideOrders', JSON.stringify(orders));
+                // Orders are stored in Trello - no localStorage needed
+                // Customer can view orders on any device by logging in
 
                 // Clear cart and show success
                 localStorage.setItem('peptideCart', '[]');
