@@ -725,8 +725,8 @@
                 </div>
             </div>
             <div class="modal-actions" id="modalActions">
-                <button class="btn-reject" onclick="rejectUser(currentModalEmail)">Reject</button>
-                <button class="btn-approve" onclick="approveUser(currentModalEmail)">Approve</button>
+                <button class="btn-reject" onclick="rejectCurrentUser()">Reject</button>
+                <button class="btn-approve" onclick="approveCurrentUser()">Approve</button>
             </div>
         </div>
     </div>
@@ -738,14 +738,27 @@
         // ============================================
         // ADMIN CREDENTIALS - CHANGE THESE!
         // ============================================
+        // ADMIN CREDENTIALS - Change these!
+        // ============================================
         const ADMIN_CREDENTIALS = {
             username: 'admin',
             password: 'peptidelab2025'
         };
         // ============================================
 
+        // Trello Configuration
+        const TRELLO_CONFIG = {
+            apiKey: '3ea0ef2b85773186d7ae30322ae1782d',
+            token: 'ATTAde902321af1ec6600e16a0587516fb0b68cff7d5ce58997aa165fc08ba35568217827FB6',
+            boardId: 'rWV4oPQr',
+            pendingListId: '697ce857fd3de6221090f04c',
+            approvedListId: '697ce87064609df12b8a618c',
+            rejectedListId: '697ce878ddf378f868235c49'
+        };
+
         let currentTab = 'pending';
-        let currentModalEmail = null;
+        let currentModalUser = null;
+        let usersCache = [];
 
         // Check if already logged in
         document.addEventListener('DOMContentLoaded', () => {
@@ -779,63 +792,84 @@
             location.reload();
         }
 
-        // Migrate old array format to object format
-        function migrateUsers() {
-            const stored = localStorage.getItem('peptideUsers');
-            if (!stored) return;
+        // Parse user data from Trello card
+        function parseUserFromCard(card) {
+            const desc = card.desc || '';
             
+            const getValue = (field) => {
+                const match = desc.match(new RegExp(`\\*\\*${field}:\\*\\*\\s*([^\\n]+)`, 'i'));
+                return match ? match[1].trim() : null;
+            };
+
+            // Determine status based on list
+            let status = 'pending';
+            if (card.idList === TRELLO_CONFIG.approvedListId) {
+                status = 'approved';
+            } else if (card.idList === TRELLO_CONFIG.rejectedListId) {
+                status = 'rejected';
+            }
+
+            // Extract registered date
+            const registeredMatch = desc.match(/\*\*Registered:\*\*\s*([^\n]+)/i);
+            let createdAt = null;
+            if (registeredMatch) {
+                createdAt = new Date(registeredMatch[1].trim()).toISOString();
+            }
+
+            return {
+                cardId: card.id,
+                listId: card.idList,
+                email: getValue('Email'),
+                firstName: getValue('First Name'),
+                lastName: getValue('Last Name'),
+                phone: getValue('Phone'),
+                institution: getValue('Institution'),
+                position: getValue('Position'),
+                field: getValue('Field'),
+                status: status,
+                approved: status === 'approved',
+                rejected: status === 'rejected',
+                createdAt: createdAt
+            };
+        }
+
+        // Fetch all users from Trello
+        async function fetchUsersFromTrello() {
             try {
-                const data = JSON.parse(stored);
-                // Check if it's an array (old format)
-                if (Array.isArray(data)) {
-                    const usersObj = {};
-                    data.forEach(user => {
-                        if (user.email) {
-                            usersObj[user.email] = {
-                                password: user.password,
-                                firstName: user.firstName,
-                                lastName: user.lastName,
-                                institution: user.institution,
-                                position: user.position,
-                                role: user.role,
-                                researchArea: user.researchArea,
-                                approved: user.approved || false,
-                                rejected: user.rejected || false,
-                                createdAt: user.createdAt
-                            };
-                        }
-                    });
-                    localStorage.setItem('peptideUsers', JSON.stringify(usersObj));
-                    console.log('Migrated users from array to object format');
-                }
-            } catch (e) {
-                console.error('Migration error:', e);
+                const response = await fetch(
+                    `https://api.trello.com/1/boards/${TRELLO_CONFIG.boardId}/cards?fields=id,name,desc,idList&key=${TRELLO_CONFIG.apiKey}&token=${TRELLO_CONFIG.token}`
+                );
+                const cards = await response.json();
+                
+                // Filter to only user cards (those in user lists)
+                const userListIds = [
+                    TRELLO_CONFIG.pendingListId,
+                    TRELLO_CONFIG.approvedListId,
+                    TRELLO_CONFIG.rejectedListId
+                ];
+                
+                const userCards = cards.filter(card => userListIds.includes(card.idList));
+                return userCards.map(parseUserFromCard).filter(u => u.email);
+            } catch (error) {
+                console.error('Error fetching users:', error);
+                return [];
             }
         }
-        
-        // Run migration on load
-        migrateUsers();
 
-        function getUsers() {
-            const stored = localStorage.getItem('peptideUsers');
-            return stored ? JSON.parse(stored) : {};
-        }
+        async function loadUsers() {
+            // Show loading state
+            document.getElementById('usersContainer').innerHTML = `
+                <div class="empty-state">
+                    <p>Loading users...</p>
+                </div>
+            `;
 
-        function saveUsers(users) {
-            localStorage.setItem('peptideUsers', JSON.stringify(users));
-        }
-
-        function loadUsers() {
-            const users = getUsers();
-            const userList = Object.entries(users).map(([email, data]) => ({
-                email,
-                ...data
-            }));
+            usersCache = await fetchUsersFromTrello();
 
             // Update stats
-            const total = userList.length;
-            const pending = userList.filter(u => u.approved === false && u.rejected !== true).length;
-            const approved = userList.filter(u => u.approved === true).length;
+            const total = usersCache.length;
+            const pending = usersCache.filter(u => u.status === 'pending').length;
+            const approved = usersCache.filter(u => u.status === 'approved').length;
 
             document.getElementById('statTotal').textContent = total;
             document.getElementById('statPending').textContent = pending;
@@ -843,13 +877,13 @@
             document.getElementById('pendingBadge').textContent = pending;
 
             // Filter by tab
-            let filtered = userList;
+            let filtered = usersCache;
             if (currentTab === 'pending') {
-                filtered = userList.filter(u => u.approved === false && u.rejected !== true);
+                filtered = usersCache.filter(u => u.status === 'pending');
             } else if (currentTab === 'approved') {
-                filtered = userList.filter(u => u.approved === true);
+                filtered = usersCache.filter(u => u.status === 'approved');
             } else if (currentTab === 'rejected') {
-                filtered = userList.filter(u => u.rejected === true);
+                filtered = usersCache.filter(u => u.status === 'rejected');
             }
 
             renderUsers(filtered);
@@ -875,23 +909,14 @@
             }
 
             container.innerHTML = users.map(user => {
-                const status = user.rejected ? 'rejected' : (user.approved ? 'approved' : 'pending');
+                const status = user.status;
                 const statusLabel = status.charAt(0).toUpperCase() + status.slice(1);
                 const date = user.createdAt ? new Date(user.createdAt).toLocaleDateString() : 'N/A';
-                const roleLabels = {
-                    researcher: 'Research Scientist',
-                    professor: 'Professor / Faculty',
-                    student: 'Graduate Student',
-                    technician: 'Lab Technician',
-                    director: 'Lab Director',
-                    industry: 'Industry Researcher',
-                    other: 'Other'
-                };
 
                 return `
                     <div class="user-row">
                         <div class="user-info">
-                            <h4>${user.firstName} ${user.lastName}</h4>
+                            <h4>${user.firstName || ''} ${user.lastName || ''}</h4>
                             <p>${user.email}</p>
                         </div>
                         <div class="user-meta">
@@ -899,17 +924,17 @@
                             <small>Applied ${date}</small>
                         </div>
                         <div class="user-meta">
-                            ${roleLabels[user.role] || user.role || 'Not specified'}
+                            ${user.position || 'Not specified'}
                         </div>
                         <div>
                             <span class="status-badge ${status}">${statusLabel}</span>
                         </div>
                         <div class="action-btns">
                             ${status === 'pending' ? `
-                                <button class="btn-approve" onclick="approveUser('${user.email}')">Approve</button>
-                                <button class="btn-reject" onclick="rejectUser('${user.email}')">Reject</button>
+                                <button class="btn-approve" onclick="approveUser('${user.cardId}')">Approve</button>
+                                <button class="btn-reject" onclick="rejectUser('${user.cardId}')">Reject</button>
                             ` : `
-                                <button class="btn-view" onclick="viewUser('${user.email}')">View</button>
+                                <button class="btn-view" onclick="viewUser('${user.cardId}')">View</button>
                             `}
                         </div>
                     </div>
@@ -924,55 +949,58 @@
             loadUsers();
         }
 
-        function approveUser(email) {
-            const users = getUsers();
-            if (users[email]) {
-                users[email].approved = true;
-                users[email].rejected = false;
-                users[email].approvedAt = new Date().toISOString();
-                saveUsers(users);
-                loadUsers();
+        // Move card to different list (approve/reject)
+        async function moveCard(cardId, targetListId) {
+            try {
+                const response = await fetch(
+                    `https://api.trello.com/1/cards/${cardId}?key=${TRELLO_CONFIG.apiKey}&token=${TRELLO_CONFIG.token}`,
+                    {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ idList: targetListId })
+                    }
+                );
+                return response.ok;
+            } catch (error) {
+                console.error('Error moving card:', error);
+                return false;
+            }
+        }
+
+        async function approveUser(cardId) {
+            const success = await moveCard(cardId, TRELLO_CONFIG.approvedListId);
+            if (success) {
                 closeModal();
                 showToast('User approved successfully', 'success');
+                loadUsers();
+            } else {
+                showToast('Error approving user', 'error');
             }
         }
 
-        function rejectUser(email) {
-            const users = getUsers();
-            if (users[email]) {
-                users[email].approved = false;
-                users[email].rejected = true;
-                users[email].rejectedAt = new Date().toISOString();
-                saveUsers(users);
-                loadUsers();
+        async function rejectUser(cardId) {
+            const success = await moveCard(cardId, TRELLO_CONFIG.rejectedListId);
+            if (success) {
                 closeModal();
                 showToast('User rejected', 'error');
+                loadUsers();
+            } else {
+                showToast('Error rejecting user', 'error');
             }
         }
 
-        function viewUser(email) {
-            const users = getUsers();
-            const user = users[email];
+        function viewUser(cardId) {
+            const user = usersCache.find(u => u.cardId === cardId);
             if (!user) return;
 
-            currentModalEmail = email;
+            currentModalUser = user;
 
-            const roleLabels = {
-                researcher: 'Research Scientist',
-                professor: 'Professor / Faculty',
-                student: 'Graduate Student',
-                technician: 'Lab Technician',
-                director: 'Lab Director',
-                industry: 'Industry Researcher',
-                other: 'Other'
-            };
-
-            document.getElementById('modalName').textContent = `${user.firstName} ${user.lastName}`;
-            document.getElementById('modalEmail').textContent = email;
+            document.getElementById('modalName').textContent = `${user.firstName || ''} ${user.lastName || ''}`;
+            document.getElementById('modalEmail').textContent = user.email || '-';
             document.getElementById('modalInstitution').textContent = user.institution || 'Not provided';
-            document.getElementById('modalRole').textContent = roleLabels[user.role] || user.role || 'Not specified';
+            document.getElementById('modalRole').textContent = user.position || 'Not specified';
             document.getElementById('modalDate').textContent = user.createdAt ? new Date(user.createdAt).toLocaleString() : 'N/A';
-            document.getElementById('modalResearch').textContent = user.researchArea || 'Not provided';
+            document.getElementById('modalResearch').textContent = user.field || 'Not provided';
 
             // Show/hide action buttons based on status
             const actions = document.getElementById('modalActions');
@@ -987,7 +1015,7 @@
 
         function closeModal() {
             document.getElementById('userModal').classList.remove('active');
-            currentModalEmail = null;
+            currentModalUser = null;
         }
 
         function showToast(message, type = '') {
@@ -1005,6 +1033,19 @@
                 closeModal();
             }
         });
+
+        // Handle modal approve/reject buttons
+        function approveCurrentUser() {
+            if (currentModalUser) {
+                approveUser(currentModalUser.cardId);
+            }
+        }
+
+        function rejectCurrentUser() {
+            if (currentModalUser) {
+                rejectUser(currentModalUser.cardId);
+            }
+        }
     </script>
 </body>
 </html>
