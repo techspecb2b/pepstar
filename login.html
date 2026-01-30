@@ -341,76 +341,135 @@
     </main>
 
     <script>
-        // Migrate old array format to object format
-        (function migrateUsers() {
-            const stored = localStorage.getItem('peptideUsers');
-            if (!stored) return;
-            try {
-                const data = JSON.parse(stored);
-                if (Array.isArray(data)) {
-                    const usersObj = {};
-                    data.forEach(user => {
-                        if (user.email) {
-                            usersObj[user.email] = {
-                                password: user.password,
-                                firstName: user.firstName,
-                                lastName: user.lastName,
-                                institution: user.institution,
-                                position: user.position,
-                                approved: user.approved || false,
-                                createdAt: user.createdAt
-                            };
-                        }
-                    });
-                    localStorage.setItem('peptideUsers', JSON.stringify(usersObj));
-                }
-            } catch (e) {}
-        })();
-
-        // Demo users for testing
-        const demoUsers = {
-            'researcher@lab.com': { password: 'demo123', firstName: 'John', lastName: 'Researcher', approved: true },
-            'pending@lab.com': { password: 'demo123', firstName: 'Jane', lastName: 'Pending', approved: false }
+        // Trello Configuration
+        const TRELLO_CONFIG = {
+            apiKey: '3ea0ef2b85773186d7ae30322ae1782d',
+            token: 'ATTAde902321af1ec6600e16a0587516fb0b68cff7d5ce58997aa165fc08ba35568217827FB6',
+            boardId: 'rWV4oPQr',
+            pendingListId: '697ce857fd3de6221090f04c',
+            approvedListId: '697ce87064609df12b8a618c',
+            rejectedListId: '697ce878ddf378f868235c49'
         };
 
-        function handleLogin(event) {
+        // Simple hash function (must match register.html)
+        function simpleHash(str) {
+            let hash = 0;
+            for (let i = 0; i < str.length; i++) {
+                const char = str.charCodeAt(i);
+                hash = ((hash << 5) - hash) + char;
+                hash = hash & hash;
+            }
+            return 'h_' + Math.abs(hash).toString(36);
+        }
+
+        // Parse user data from Trello card
+        function parseUserFromCard(card) {
+            const desc = card.desc || '';
+            
+            const getValue = (field) => {
+                const match = desc.match(new RegExp(`\\*\\*${field}:\\*\\*\\s*([^\\n]+)`, 'i'));
+                return match ? match[1].trim() : null;
+            };
+
+            return {
+                cardId: card.id,
+                listId: card.idList,
+                email: getValue('Email'),
+                firstName: getValue('First Name'),
+                lastName: getValue('Last Name'),
+                phone: getValue('Phone'),
+                institution: getValue('Institution'),
+                position: getValue('Position'),
+                field: getValue('Field'),
+                passwordHash: getValue('Password Hash')
+            };
+        }
+
+        // Find user by email in Trello
+        async function findUserByEmail(email) {
+            try {
+                const response = await fetch(
+                    `https://api.trello.com/1/boards/${TRELLO_CONFIG.boardId}/cards?fields=id,name,desc,idList&key=${TRELLO_CONFIG.apiKey}&token=${TRELLO_CONFIG.token}`
+                );
+                const cards = await response.json();
+                
+                const emailLower = email.toLowerCase().trim();
+                for (const card of cards) {
+                    const user = parseUserFromCard(card);
+                    if (user.email && user.email.toLowerCase().trim() === emailLower) {
+                        return user;
+                    }
+                }
+                return null;
+            } catch (error) {
+                console.error('Error finding user:', error);
+                return null;
+            }
+        }
+
+        async function handleLogin(event) {
             event.preventDefault();
             
-            const email = document.getElementById('email').value;
+            const email = document.getElementById('email').value.trim();
             const password = document.getElementById('password').value;
+            const submitBtn = document.querySelector('button[type="submit"]');
+            const originalBtnText = submitBtn.textContent;
 
             // Hide alerts
             document.getElementById('errorAlert').classList.add('hidden');
             document.getElementById('pendingAlert').classList.add('hidden');
 
-            // Check demo users or localStorage
-            const users = JSON.parse(localStorage.getItem('peptideUsers') || '{}');
-            const allUsers = { ...demoUsers, ...users };
+            try {
+                submitBtn.disabled = true;
+                submitBtn.textContent = 'Signing in...';
 
-            const user = allUsers[email];
+                // Find user in Trello
+                const user = await findUserByEmail(email);
 
-            if (!user || user.password !== password) {
-                document.getElementById('errorAlert').classList.remove('hidden');
-                return;
+                if (!user) {
+                    document.getElementById('errorAlert').classList.remove('hidden');
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = originalBtnText;
+                    return;
+                }
+
+                // Verify password
+                const passwordHash = simpleHash(password);
+                if (user.passwordHash !== passwordHash) {
+                    document.getElementById('errorAlert').classList.remove('hidden');
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = originalBtnText;
+                    return;
+                }
+
+                // Check if approved (card must be in Approved list)
+                if (user.listId !== TRELLO_CONFIG.approvedListId) {
+                    document.getElementById('pendingAlert').classList.remove('hidden');
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = originalBtnText;
+                    return;
+                }
+
+                // Save logged in user session
+                const userData = {
+                    email: user.email,
+                    firstName: user.firstName,
+                    lastName: user.lastName,
+                    institution: user.institution,
+                    approved: true
+                };
+                localStorage.setItem('peptideUser', JSON.stringify(userData));
+
+                // Redirect to account or previous page
+                const returnUrl = new URLSearchParams(window.location.search).get('return') || 'account.html';
+                window.location.href = returnUrl;
+
+            } catch (error) {
+                console.error('Login error:', error);
+                alert('There was an error signing in. Please try again.');
+                submitBtn.disabled = false;
+                submitBtn.textContent = originalBtnText;
             }
-
-            if (!user.approved) {
-                document.getElementById('pendingAlert').classList.remove('hidden');
-                return;
-            }
-
-            // Save logged in user
-            const userData = {
-                email,
-                firstName: user.firstName,
-                lastName: user.lastName,
-                approved: user.approved
-            };
-            localStorage.setItem('peptideUser', JSON.stringify(userData));
-
-            // Redirect to account or previous page
-            const returnUrl = new URLSearchParams(window.location.search).get('return') || 'account.html';
-            window.location.href = returnUrl;
         }
 
         // Check if already logged in
@@ -420,6 +479,14 @@
                 window.location.href = 'account.html';
             }
         });
+
+        // Cart count
+        function updateCartCount() {
+            const cart = JSON.parse(localStorage.getItem('peptideCart') || '[]');
+            const el = document.getElementById('cartCount');
+            if (el) el.textContent = cart.reduce((sum, item) => sum + item.quantity, 0);
+        }
+        updateCartCount();
     </script>
 </body>
 </html>
