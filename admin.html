@@ -1151,7 +1151,7 @@
                     </div>
                     <div class="form-group">
                         <label>Form</label>
-                        <select name="form" required>
+                        <select name="productForm" required>
                             <option value="Lyophilized Powder">Lyophilized Powder</option>
                             <option value="Solution">Solution</option>
                             <option value="Capsules">Capsules</option>
@@ -1746,7 +1746,7 @@
                 const productId = form.productId.value.toLowerCase().trim();
                 const productName = form.productName.value.trim();
                 const category = form.category.value;
-                const productForm = form.form.value;
+                const productFormType = form.productForm.value;
                 const purity = form.purity.value;
                 const badge = form.badge.value;
                 const formula = form.formula.value;
@@ -1779,7 +1779,7 @@
                     sizes: sizes,
                     prices: prices,
                     purity: purity,
-                    form: productForm,
+                    form: productFormType,
                     specs: { formula: formula || 'N/A', weight: weight || 'N/A' },
                     badge: badge || undefined,
                     popularity: 5
@@ -1808,7 +1808,7 @@
                 
             } catch (error) {
                 console.error('Error adding product:', error);
-                showToast('Error adding product', 'error');
+                showToast('Error adding product: ' + error.message, 'error');
             }
             
             submitBtn.disabled = false;
@@ -1820,6 +1820,10 @@
             let productsListId = await findProductsList();
             if (!productsListId) {
                 productsListId = await createProductsList();
+            }
+            
+            if (!productsListId) {
+                throw new Error('Could not find or create Products list');
             }
             
             const cardDesc = `
@@ -1858,7 +1862,11 @@ ${JSON.stringify(product)}
                 }
             );
             
-            return response.ok;
+            if (!response.ok) {
+                throw new Error('Failed to create product card in Trello');
+            }
+            
+            return true;
         }
         
         async function findProductsList() {
@@ -1875,20 +1883,26 @@ ${JSON.stringify(product)}
         }
         
         async function createProductsList() {
-            const response = await fetch(
-                `https://api.trello.com/1/lists?key=${TRELLO_CONFIG.apiKey}&token=${TRELLO_CONFIG.token}`,
-                {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        name: 'Products',
-                        idBoard: TRELLO_CONFIG.boardId,
-                        pos: 'bottom'
-                    })
-                }
-            );
-            const list = await response.json();
-            return list.id;
+            try {
+                const response = await fetch(
+                    `https://api.trello.com/1/lists?key=${TRELLO_CONFIG.apiKey}&token=${TRELLO_CONFIG.token}`,
+                    {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            name: 'Products',
+                            idBoard: TRELLO_CONFIG.boardId,
+                            pos: 'bottom'
+                        })
+                    }
+                );
+                if (!response.ok) throw new Error('Failed to create Products list');
+                const list = await response.json();
+                return list.id;
+            } catch (error) {
+                console.error('Error creating Products list:', error);
+                throw error;
+            }
         }
         
         // Get products list from catalog (hardcoded for now, could be fetched from Trello)
