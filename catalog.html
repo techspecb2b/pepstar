@@ -313,9 +313,15 @@
                 products = cards.map(card => {
                     const desc = card.desc;
                     
-                    // Parse all fields from card description
+                    // Parse fields from card description - match only on same line
                     const getField = (field) => {
-                        const match = desc.match(new RegExp(`\\*\\*${field}:\\*\\*\\s*(.+?)(?=\\n|$)`));
+                        const match = desc.match(new RegExp(`\\*\\*${field}:\\*\\*[ \\t]*([^\\n\\r]*)`));
+                        return match ? match[1].trim() : '';
+                    };
+                    
+                    // Special parser for description which can be multiline
+                    const getDescription = () => {
+                        const match = desc.match(/\*\*Description:\*\*[ \t]*([\s\S]*?)$/);
                         return match ? match[1].trim() : '';
                     };
                     
@@ -328,8 +334,11 @@
                     const pricesStr = getField('Prices');
                     const formula = getField('Formula') || 'N/A';
                     const weight = getField('Weight') || 'N/A';
-                    const badge = getField('Badge') || '';
-                    const descriptionRaw = getField('Description') || 'Premium research peptide for qualified researchers.';
+                    const badgeRaw = getField('Badge');
+                    // Only use badge if it's a valid badge value
+                    const validBadges = ['New', 'Popular', 'Best Seller', 'Bundle'];
+                    const badge = validBadges.includes(badgeRaw) ? badgeRaw : '';
+                    const descriptionRaw = getDescription() || 'Premium research peptide for qualified researchers.';
                     
                     // Parse sizes array
                     let sizes = ['10mg'];
