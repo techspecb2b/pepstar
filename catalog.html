@@ -2,6 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="apple-touch-icon" href="favicon.png">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Research Peptide Catalog | Pepstar Peptides</title>
     <meta name="description" content="Browse our complete catalog of premium research peptides. 99%+ purity, third-party tested.">
@@ -67,6 +69,14 @@
         .product-image img { width: 100%; height: 100%; object-fit: cover; object-position: center; }
         .product-placeholder svg { width: 48px; height: 48px; stroke: var(--primary); opacity: 0.3; fill: none; stroke-width: 1.5; }
         .product-badge { position: absolute; top: 12px; left: 12px; background: var(--accent); color: white; padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; }
+        .stock-badge { padding: 6px 12px; border-radius: 6px; font-size: 0.8rem; font-weight: 600; margin: 8px 0; text-align: center; }
+        .stock-badge.out-of-stock { background: #fff5f5; color: #e53e3e; border: 1px solid #fed7d7; }
+        .stock-badge.low-stock { background: #fffbeb; color: #d69e2e; border: 1px solid #fef3c7; }
+        .stock-badge.in-stock { background: #f0fff4; color: #38a169; border: 1px solid #c6f6d5; }
+        .product-card.out-of-stock { opacity: 0.7; }
+        .product-card.out-of-stock .product-image { filter: grayscale(50%); }
+        .spec-item.stock-spec { grid-column: 1 / -1; margin-top: 8px; }
+        .modal-add-btn:disabled { background: #a0aec0; cursor: not-allowed; }
         .product-info { padding: 20px; }
         .product-category { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--accent); font-weight: 600; margin-bottom: 6px; }
         .product-name { font-size: 1.1rem; margin-bottom: 8px; }
@@ -277,6 +287,72 @@
             document.body.style.overflow = mobileNav.classList.contains('active') ? 'hidden' : '';
         }
 
+        // Trello Inventory Configuration
+        const TRELLO_CONFIG = {
+            apiKey: '3ea0ef2b85773186d7ae30322ae1782d',
+            token: 'ATTAde902321af1ec6600e16a0587516fb0b68cff7d5ce58997aa165fc08ba35568217827FB6',
+            boardId: 'rWV4oPQr',
+            inventoryListId: '697d87ef6d084cafcbaf70f3'
+        };
+        
+        let inventoryData = {};
+        let inventoryLoaded = false;
+
+        // Load inventory from Trello
+        async function loadInventory() {
+            try {
+                // Get inventory cards directly using list ID
+                const cardsResponse = await fetch(
+                    `https://api.trello.com/1/lists/${TRELLO_CONFIG.inventoryListId}/cards?key=${TRELLO_CONFIG.apiKey}&token=${TRELLO_CONFIG.token}`
+                );
+                const cards = await cardsResponse.json();
+                
+                // Parse inventory data
+                cards.forEach(card => {
+                    const qtyMatch = card.desc.match(/\*\*Quantity:\*\*\s*(\d+)/);
+                    inventoryData[card.name] = qtyMatch ? parseInt(qtyMatch[1]) : 0;
+                });
+                
+                inventoryLoaded = true;
+                console.log('Inventory loaded:', inventoryData);
+                
+                // Re-render products with inventory data
+                applyFilters();
+                
+            } catch (error) {
+                console.error('Error loading inventory:', error);
+                inventoryLoaded = true; // Continue without inventory data
+            }
+        }
+
+        function getStock(productId) {
+            if (!inventoryLoaded) return null; // Unknown
+            if (inventoryData.hasOwnProperty(productId)) {
+                return inventoryData[productId];
+            }
+            return null; // No inventory tracking for this product
+        }
+
+        function getStockDisplay(productId) {
+            const stock = getStock(productId);
+            if (stock === null) return { html: '', class: '', canBuy: true };
+            if (stock === 0) {
+                return { 
+                    html: '<div class="stock-badge out-of-stock">Currently Out of Stock</div>', 
+                    class: 'out-of-stock',
+                    canBuy: false 
+                };
+            }
+            if (stock <= 5) {
+                return { 
+                    html: `<div class="stock-badge low-stock">🔥 Only ${stock} Left - Buy Now!</div>`, 
+                    class: 'low-stock',
+                    canBuy: true 
+                };
+            }
+            return { html: '<div class="stock-badge in-stock">In Stock</div>', class: '', canBuy: true };
+        }
+
 const products=[
 {id:'5-amino-1mq',image:'images/5-amino-1mq.png',name:'5-Amino-1MQ',category:'Metabolic Research',description:'5-Amino-1MQ is a potent and selective inhibitor of nicotinamide N-methyltransferase (NNMT), an enzyme that plays a significant role in cellular energy metabolism and fat cell regulation. Research suggests that NNMT is overexpressed in adipose tissue and may contribute to obesity and metabolic dysfunction by depleting NAD+ levels and disrupting metabolic homeostasis.\n\nIn preclinical studies, 5-Amino-1MQ has been shown to potentially reverse diet-induced obesity in murine models without affecting food intake. The compound appears to work by restoring NAD+ levels in adipocytes, which may enhance metabolic rate and promote the conversion of white adipose tissue to metabolically active brown-like adipose tissue.\n\nResearchers have noted that 5-Amino-1MQ demonstrates excellent cell permeability and may influence multiple metabolic pathways including those involved in cholesterol synthesis, lipogenesis, and energy expenditure. Studies indicate the compound may also affect stem cell differentiation and cellular senescence pathways, making it a subject of interest in longevity and regenerative medicine research.',sizes:['50mg'],prices:{'50mg':100},purity:'99%+',form:'Lyophilized Powder',specs:{formula:'C11H13N3O',weight:'203.24 g/mol'},popularity:6},
 
@@ -357,8 +433,8 @@ function renderActiveFilters(){const t=[];if(activeFilters.search)t.push(`<span 
 function clearSearch(){activeFilters.search='';document.getElementById('searchInput').value='';document.getElementById('headerSearchInput').value='';applyFilters();}
 function removeCategory(c){activeFilters.categories=activeFilters.categories.filter(x=>x!==c);const cb=document.querySelector(`#categoryFilters input[value="${c}"]`);if(cb)cb.checked=false;applyFilters();}
 function resetFilters(){activeFilters={search:'',categories:[],priceMin:null,priceMax:null,sort:'name-asc'};document.getElementById('searchInput').value='';document.getElementById('headerSearchInput').value='';document.getElementById('priceMin').value='';document.getElementById('priceMax').value='';document.getElementById('sortSelect').value='name-asc';document.querySelectorAll('#categoryFilters input').forEach(cb=>cb.checked=false);applyFilters();}
-function renderProducts(list){const g=document.getElementById('productsGrid');const m=isApprovedMember();g.innerHTML=list.map(p=>{const min=Math.min(...Object.values(p.prices));return`<div class="product-card" onclick="openModal('${p.id}')"><div class="product-image">${p.badge?`<span class="product-badge">${p.badge}</span>`:''}<img src="${p.image}" alt="${p.name}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';"><div class="product-placeholder" style="display:none;"><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div></div><div class="product-info"><div class="product-category">${p.category}</div><h3 class="product-name">${p.name}</h3><div class="product-meta"><span>Purity: ${p.purity}</span><span>${p.form}</span></div>${m?`<div class="product-price">$${min}${p.sizes.length>1?'+':''}</div>`:`<div class="product-price hidden-price">Login for pricing</div>`}<div class="product-sizes">${p.sizes.map(s=>`<span class="size-tag">${s}</span>`).join('')}</div></div></div>`;}).join('');}
-function openModal(id){const p=products.find(x=>x.id===id);if(!p)return;currentModalProduct=p;document.getElementById('modalCategory').textContent=p.category;document.getElementById('modalTitle').textContent=p.name;const modalImg=document.getElementById('modalImage');modalImg.src=p.image;modalImg.alt=p.name;modalImg.style.display='block';modalImg.nextElementSibling.style.display='none';document.getElementById('modalSpecs').innerHTML=`<div class="spec-item"><label>Purity</label><span>${p.purity}</span></div><div class="spec-item"><label>Form</label><span>${p.form}</span></div><div class="spec-item"><label>Formula</label><span>${p.specs.formula}</span></div><div class="spec-item"><label>Mol. Weight</label><span>${p.specs.weight}</span></div>`;const m=isApprovedMember();const sel=document.getElementById('modalSizeSelect');sel.innerHTML='<option value="">-- Choose a size --</option>'+p.sizes.map(s=>`<option value="${s}">${s}${m?` - $${p.prices[s]}`:''}</option>`).join('');sel.classList.remove('error');document.getElementById('sizeError').classList.remove('show');document.getElementById('modalDescription').innerHTML=p.description.replace(/\n\n/g,'<br><br>');document.getElementById('productModal').classList.add('active');document.body.style.overflow='hidden';}
+function renderProducts(list){const g=document.getElementById('productsGrid');const m=isApprovedMember();g.innerHTML=list.map(p=>{const min=Math.min(...Object.values(p.prices));const stockInfo=getStockDisplay(p.id);return`<div class="product-card ${stockInfo.class}" onclick="openModal('${p.id}')"><div class="product-image">${p.badge?`<span class="product-badge">${p.badge}</span>`:''}<img src="${p.image}" alt="${p.name}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';"><div class="product-placeholder" style="display:none;"><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div></div><div class="product-info"><div class="product-category">${p.category}</div><h3 class="product-name">${p.name}</h3><div class="product-meta"><span>Purity: ${p.purity}</span><span>${p.form}</span></div>${stockInfo.html}${m?`<div class="product-price">$${min}${p.sizes.length>1?'+':''}</div>`:`<div class="product-price hidden-price">Login for pricing</div>`}<div class="product-sizes">${p.sizes.map(s=>`<span class="size-tag">${s}</span>`).join('')}</div></div></div>`;}).join('');}
+function openModal(id){const p=products.find(x=>x.id===id);if(!p)return;currentModalProduct=p;const stockInfo=getStockDisplay(p.id);document.getElementById('modalCategory').textContent=p.category;document.getElementById('modalTitle').textContent=p.name;const modalImg=document.getElementById('modalImage');modalImg.src=p.image;modalImg.alt=p.name;modalImg.style.display='block';modalImg.nextElementSibling.style.display='none';document.getElementById('modalSpecs').innerHTML=`<div class="spec-item"><label>Purity</label><span>${p.purity}</span></div><div class="spec-item"><label>Form</label><span>${p.form}</span></div><div class="spec-item"><label>Formula</label><span>${p.specs.formula}</span></div><div class="spec-item"><label>Mol. Weight</label><span>${p.specs.weight}</span></div>${stockInfo.html?`<div class="spec-item stock-spec">${stockInfo.html}</div>`:''}`;const m=isApprovedMember();const sel=document.getElementById('modalSizeSelect');sel.innerHTML='<option value="">-- Choose a size --</option>'+p.sizes.map(s=>`<option value="${s}">${s}${m?` - $${p.prices[s]}`:''}</option>`).join('');sel.classList.remove('error');sel.disabled=!stockInfo.canBuy;document.getElementById('sizeError').classList.remove('show');const addBtn=document.querySelector('.modal-add-btn');if(addBtn){addBtn.disabled=!stockInfo.canBuy;addBtn.textContent=stockInfo.canBuy?'Add to Cart':'Out of Stock';}document.getElementById('modalDescription').innerHTML=p.description.replace(/\n\n/g,'<br><br>');document.getElementById('productModal').classList.add('active');document.body.style.overflow='hidden';}
 function closeModal(){document.getElementById('productModal').classList.remove('active');document.body.style.overflow='';currentModalProduct=null;}
 function addModalToCart(){if(!currentModalProduct)return;const sel=document.getElementById('modalSizeSelect');if(!sel.value){sel.classList.add('error');document.getElementById('sizeError').classList.add('show');return;}addToCart(currentModalProduct.id,sel.value);closeModal();}
 document.getElementById('searchInput').addEventListener('input',e=>{activeFilters.search=e.target.value;document.getElementById('headerSearchInput').value=e.target.value;applyFilters();});
@@ -369,7 +445,7 @@ document.getElementById('priceMax').addEventListener('input',e=>{activeFilters.p
 document.getElementById('productModal').addEventListener('click',e=>{if(e.target.classList.contains('modal-overlay'))closeModal();});
 document.getElementById('modalSizeSelect').addEventListener('change',()=>{document.getElementById('modalSizeSelect').classList.remove('error');document.getElementById('sizeError').classList.remove('show');});
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal();});
-document.addEventListener('DOMContentLoaded',()=>{renderCategoryFilters();updateCartCount();const cat=new URLSearchParams(window.location.search).get('category');if(cat){activeFilters.categories=[cat];const cb=document.querySelector(`#categoryFilters input[value="${cat}"]`);if(cb)cb.checked=true;}applyFilters();});
+document.addEventListener('DOMContentLoaded',()=>{renderCategoryFilters();updateCartCount();loadInventory();const cat=new URLSearchParams(window.location.search).get('category');if(cat){activeFilters.categories=[cat];const cb=document.querySelector(`#categoryFilters input[value="${cat}"]`);if(cb)cb.checked=true;}applyFilters();});
     </script>
 </body>
 </html>
