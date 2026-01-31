@@ -989,18 +989,18 @@
                         const currentQty = qtyMatch ? parseInt(qtyMatch[1]) : 0;
                         const newQty = Math.max(0, currentQty - item.quantity);
                         
-                        // Update card with new quantity
-                        const productMatch = card.desc.match(/\*\*Product:\*\*\s*([^\n]+)/);
-                        const productName = productMatch ? productMatch[1].trim() : item.name;
+                        // Update only the Quantity line, preserve all other data
+                        let newDesc = card.desc;
+                        if (newDesc.includes('**Quantity:**')) {
+                            newDesc = newDesc.replace(/\*\*Quantity:\*\*\s*\d+/, `**Quantity:** ${newQty}`);
+                        }
                         
                         await fetch(
                             `https://api.trello.com/1/cards/${card.id}?key=${TRELLO_CONFIG.apiKey}&token=${TRELLO_CONFIG.token}`,
                             {
                                 method: 'PUT',
                                 headers: { 'Content-Type': 'application/json' },
-                                body: JSON.stringify({
-                                    desc: `**Product:** ${productName}\n**Quantity:** ${newQty}`
-                                })
+                                body: JSON.stringify({ desc: newDesc })
                             }
                         );
                         
