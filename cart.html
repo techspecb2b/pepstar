@@ -2,6 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="apple-touch-icon" href="favicon.png">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Your Cart | Pepstar Peptides</title>
     <meta name="description" content="Review your research peptide order and submit for processing.">
@@ -964,8 +966,52 @@
         const TRELLO_CONFIG = {
             apiKey: '3ea0ef2b85773186d7ae30322ae1782d',
             token: 'ATTAde902321af1ec6600e16a0587516fb0b68cff7d5ce58997aa165fc08ba35568217827FB6',
-            listId: '697c389468486ab7a61c6109'
+            listId: '697c389468486ab7a61c6109',
+            boardId: 'rWV4oPQr',
+            inventoryListId: '697d87ef6d084cafcbaf70f3'
         };
+
+        // Deduct inventory after order is placed
+        async function deductInventory(cart) {
+            try {
+                // Get inventory cards directly using list ID
+                const cardsResponse = await fetch(
+                    `https://api.trello.com/1/lists/${TRELLO_CONFIG.inventoryListId}/cards?key=${TRELLO_CONFIG.apiKey}&token=${TRELLO_CONFIG.token}`
+                );
+                const cards = await cardsResponse.json();
+                
+                // Deduct each item from inventory
+                for (const item of cart) {
+                    const card = cards.find(c => c.name === item.id);
+                    if (card) {
+                        // Parse current quantity
+                        const qtyMatch = card.desc.match(/\*\*Quantity:\*\*\s*(\d+)/);
+                        const currentQty = qtyMatch ? parseInt(qtyMatch[1]) : 0;
+                        const newQty = Math.max(0, currentQty - item.quantity);
+                        
+                        // Update card with new quantity
+                        const productMatch = card.desc.match(/\*\*Product:\*\*\s*([^\n]+)/);
+                        const productName = productMatch ? productMatch[1].trim() : item.name;
+                        
+                        await fetch(
+                            `https://api.trello.com/1/cards/${card.id}?key=${TRELLO_CONFIG.apiKey}&token=${TRELLO_CONFIG.token}`,
+                            {
+                                method: 'PUT',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({
+                                    desc: `**Product:** ${productName}\n**Quantity:** ${newQty}`
+                                })
+                            }
+                        );
+                        
+                        console.log(`Deducted ${item.quantity} from ${item.name}, new qty: ${newQty}`);
+                    }
+                }
+            } catch (error) {
+                console.error('Error deducting inventory:', error);
+                // Don't fail the order if inventory deduction fails
+            }
+        }
 
         let currentStep = 'cart'; // cart, form, success
 
@@ -1211,6 +1257,9 @@ ${customer.notes ? '**NOTES:**\n' + customer.notes : ''}
                     });
 
                     if (!response.ok) throw new Error('Trello API error');
+                    
+                    // Deduct inventory for ordered items
+                    await deductInventory(cart);
                 } else {
                     // Demo mode - simulate API call
                     await new Promise(resolve => setTimeout(resolve, 1500));
